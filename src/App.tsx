@@ -15,7 +15,7 @@ export default function App() {
   return (
     <ToastProvider>
       <TooltipProvider>
-        <div className="h-screen min-h-0 bg-bg-app">
+        <div className="h-dvh min-h-0 bg-bg-app">
           <ConsolePage
             scenarioId={scenarioId}
             runId={runId}

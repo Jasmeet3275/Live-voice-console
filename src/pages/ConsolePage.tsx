@@ -283,7 +283,7 @@ function BottomDock({ onTakeOver, onBook, onRequestEnd }: { onTakeOver: () => vo
   const notStarted = clock.elapsed === 0 // controls stay inert until the call begins
 
   return (
-    <div className="shrink-0 border-t border-border bg-surface p-3">
+    <div className="shrink-0 border-t border-border bg-surface p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <div className="mx-auto flex max-w-4xl items-center gap-3">
         <div className="min-w-0 flex-1">
         {inactive ? (
