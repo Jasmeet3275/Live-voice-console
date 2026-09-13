@@ -1,0 +1,139 @@
+/* Design tokens — Calm Operational Console. Single source of truth for theme.
+   Light = :root (default). Dark = [data-theme="dark"]. */
+
+:root {
+  color-scheme: light;
+
+  /* base surfaces */
+  --bg-app: #f6f8fb;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --surface-hover: #f8fafc;
+
+  /* borders */
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* text */
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* accent (teal) */
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --accent-fg: #ffffff;
+  --accent-subtle: #f0fdfa;
+  --accent-border: #99f6e4;
+
+  /* running / info (blue) */
+  --info: #2563eb;
+  --info-subtle: #eff6ff;
+  --info-border: #bfdbfe;
+
+  /* success (green) */
+  --success: #16a34a;
+  --success-subtle: #f0fdf4;
+  --success-border: #bbf7d0;
+
+  /* warning (amber) */
+  --warning: #b45309;
+  --warning-solid: #f59e0b;
+  --warning-subtle: #fffbeb;
+  --warning-border: #fde68a;
+
+  /* error (red) */
+  --error: #dc2626;
+  --error-subtle: #fef2f2;
+  --error-border: #fecaca;
+
+  /* waiting — human-in-the-loop (violet) */
+  --waiting: #7c3aed;
+  --waiting-subtle: #f5f3ff;
+  --waiting-border: #ddd6fe;
+
+  /* focus */
+  --focus-ring: #0d9488;
+
+  /* call dock — macOS-style frosted glass (translucent; blurs content behind) */
+  --dock-bg: rgba(255, 255, 255, 0.55);
+  --dock-border: rgba(15, 23, 42, 0.08);
+  --dock-btn: rgba(15, 23, 42, 0.06); /* translucent grey circle */
+  --dock-btn-border: transparent;
+  --dock-btn-hover: rgba(15, 23, 42, 0.11);
+  --dock-btn-fg: #475569;
+  --dock-btn-active-bg: #ffffff; /* toggled "on" = solid white (Control Center) */
+  --dock-btn-active-fg: #1e293b;
+  --dock-transport-bg: #ffffff;
+  --dock-transport-fg: #1e293b;
+  --dock-wave-upcoming: rgba(15, 23, 42, 0.18);
+
+  /* elevation */
+  --elev-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --elev-2: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --elev-3: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg-app: #0b1220;
+  --surface: #0f172a;
+  --surface-2: #1e293b;
+  --surface-hover: #172033;
+
+  --border: #1e293b;
+  --border-strong: #334155;
+
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0b1220;
+
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-fg: #042f2e;
+  --accent-subtle: #0c2c2a;
+  --accent-border: #115e59;
+
+  --info: #60a5fa;
+  --info-subtle: #0e1e3a;
+  --info-border: #1e3a8a;
+
+  --success: #4ade80;
+  --success-subtle: #0c2818;
+  --success-border: #166534;
+
+  --warning: #fbbf24;
+  --warning-solid: #f59e0b;
+  --warning-subtle: #2a1e05;
+  --warning-border: #854d0e;
+
+  --error: #f87171;
+  --error-subtle: #2a0f10;
+  --error-border: #991b1b;
+
+  --waiting: #a78bfa;
+  --waiting-subtle: #1e1533;
+  --waiting-border: #5b21b6;
+
+  --focus-ring: #2dd4bf;
+
+  /* call dock — macOS-style frosted glass (dark) */
+  --dock-bg: rgba(20, 29, 47, 0.5);
+  --dock-border: rgba(255, 255, 255, 0.08);
+  --dock-btn: rgba(255, 255, 255, 0.08); /* translucent circle */
+  --dock-btn-border: transparent;
+  --dock-btn-hover: rgba(255, 255, 255, 0.15);
+  --dock-btn-fg: #cbd5e1;
+  --dock-btn-active-bg: #ffffff; /* toggled "on" = solid white */
+  --dock-btn-active-fg: #1e293b;
+  --dock-transport-bg: #ffffff;
+  --dock-transport-fg: #1e293b;
+  --dock-wave-upcoming: rgba(255, 255, 255, 0.2);
+
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --elev-2: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --elev-3: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
