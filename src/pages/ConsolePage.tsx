@@ -441,7 +441,7 @@ function ConsoleHeader({ onShowShortcuts }: { onShowShortcuts: () => void }) {
               <ThemeToggle />
             </div>
             {started && (
-              <WaveformTrack height={20} progress={clock.progress} onSeek={(f) => clock.seek(f * clock.duration)} />
+              <WaveformTrack height={10} progress={clock.progress} onSeek={(f) => clock.seek(f * clock.duration)} />
             )}
           </div>
         )}

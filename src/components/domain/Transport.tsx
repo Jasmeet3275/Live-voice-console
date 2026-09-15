@@ -147,7 +147,7 @@ export function Transport({
             onClick={onEnd}
             disabled={disabled}
             aria-label="End call"
-            className="flex shrink-0 items-center gap-2 rounded-xl bg-error px-[17px] py-[11px] text-[13.5px] font-semibold text-white shadow-[0_6px_16px_-9px_rgba(192,57,43,0.7)] transition-transform duration-150 hover:-translate-y-0.5"
+            className="flex shrink-0 items-center gap-2 rounded-full sm:rounded-xl bg-error px-[17px] py-[11px] text-[13.5px] font-semibold text-white shadow-[0_6px_16px_-9px_rgba(192,57,43,0.7)] transition-transform duration-150 hover:-translate-y-0.5"
           >
             <PhoneOff size={14} /> <span className="hidden sm:inline">End call</span>
           </button>

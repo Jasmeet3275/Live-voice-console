@@ -91,7 +91,7 @@ export function ThreadNotice({
           <div className="mb-0.5 flex flex-wrap items-baseline gap-2.5">
             <span className={cn('text-[13.5px] font-semibold', teal ? 'text-success' : 'text-text')}>{title}</span>
             {who && <span className={cn('text-[11.5px]', teal ? 'text-success' : 'text-text-muted')}>{who}</span>}
-            {meta && <span className={cn('ml-auto text-[11.5px]', teal ? 'text-success' : 'text-text-muted')}>{meta}</span>}
+            {meta && <span className={cn('ml-0 sm:ml-auto text-[11.5px]', teal ? 'text-success' : 'text-text-muted')}>{meta}</span>}
           </div>
           <p className={cn('text-[12.5px] leading-[1.5]', teal ? 'text-success' : 'text-text-secondary')}>{description}</p>
         </div>
