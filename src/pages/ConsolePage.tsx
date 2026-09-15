@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { Play, Pause, RotateCcw, PhoneOff, Moon, Sun, Keyboard, ClipboardList, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
-import { Button, Select, IconButton, Tooltip, Dialog } from '@/components/ui'
+import { Select, IconButton, Tooltip, Modal } from '@/components/ui'
 import { CallProvider } from '@/store/CallProvider'
 import { useCall, useCallSend } from '@/hooks/useCall'
 import { useClock } from '@/hooks/useClock'
@@ -635,6 +635,40 @@ function CollapsedRail({
   )
 }
 
+/** The end-call confirmation — a quiet destructive frame (design_handoff "End
+ *  call modal · 1B"): a red dot + the same copy, then a sand footer with Cancel
+ *  and End call split half-and-half. No close ✕ — Cancel and Esc are the exits. */
+function EndCallDialog({ open, onOpenChange, onEnd }: { open: boolean; onOpenChange: (o: boolean) => void; onEnd: () => void }) {
+  return (
+    <Modal open={open} onOpenChange={onOpenChange} label="End this call?" className="max-w-[388px] overflow-hidden">
+      <div className="px-5 pb-[18px] pt-5">
+        <div className="mb-2 flex items-center gap-2.5">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-error" />
+          <Modal.Title className="text-[16px] font-semibold tracking-[-0.02em] text-text">End this call?</Modal.Title>
+        </div>
+        <Modal.Description className="text-[13px] leading-[1.55] text-text-secondary">
+          The call will be disconnected. Any unconfirmed booking will be lost unless it has been held.
+        </Modal.Description>
+      </div>
+      <div className="flex gap-2 border-t border-border bg-surface-2 px-5 py-3.5">
+        <button
+          onClick={() => onOpenChange(false)}
+          className="flex h-[38px] flex-1 items-center justify-center rounded-[10px] border border-border-strong bg-surface text-[13.5px] font-semibold text-text-secondary transition-colors hover:bg-surface-hover"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onEnd}
+          data-autofocus
+          className="flex h-[38px] flex-1 items-center justify-center rounded-[10px] bg-error text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
+        >
+          End call
+        </button>
+      </div>
+    </Modal>
+  )
+}
+
 function ConsoleShell({
   scenarioId, onScenario, onRestart,
 }: {
@@ -749,17 +783,10 @@ function ConsoleShell({
       <BottomDock onTakeOver={takeOver} onRequestEnd={() => setEndOpen(true)} />
 
       <ShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
-      <Dialog
+      <EndCallDialog
         open={endOpen}
         onOpenChange={setEndOpen}
-        title="End this call?"
-        description="The call will be disconnected. Any unconfirmed booking will be lost unless it has been held."
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setEndOpen(false)}>Cancel</Button>
-            <Button variant="danger" onClick={() => { send({ type: 'endCall' }); setEndOpen(false) }} data-autofocus>End call</Button>
-          </>
-        }
+        onEnd={() => { send({ type: 'endCall' }); setEndOpen(false) }}
       />
       <LiveAnnouncer />
     </div>

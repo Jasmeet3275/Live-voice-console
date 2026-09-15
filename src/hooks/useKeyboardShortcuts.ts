@@ -1,19 +1,54 @@
 import { useEffect, useRef } from 'react'
 
-/** Single source of truth for the operator shortcut map — consumed by the
- *  handler below and rendered verbatim in the help dialog. */
-export const SHORTCUTS: { keys: string[]; label: string; when?: string }[] = [
-  { keys: ['Space', 'K'], label: 'Play / pause the call' },
-  { keys: ['←', '→'], label: 'Seek', when: 'waveform focused' },
-  { keys: ['M'], label: 'Mute / unmute' },
-  { keys: ['S'], label: 'Speaker on / off' },
-  { keys: ['T'], label: 'Take over the call', when: 'AI in control' },
-  { keys: ['H'], label: 'Hand back to the AI', when: 'you in control' },
-  { keys: ['B'], label: 'Widen / narrow the booking record' },
-  { keys: ['E'], label: 'End the call' },
-  { keys: ['Esc'], label: 'Close a dialog · at a checkpoint, take over' },
-  { keys: ['?'], label: 'Show keyboard shortcuts' },
+export interface Shortcut {
+  keys: string[]
+  label: string
+  when?: string
+  /** Render "or" between the keys (alternatives), not side by side. */
+  alt?: boolean
+}
+export interface ShortcutGroup {
+  title: string
+  /** The risky band — the keys that change who is talking (ink keycaps on sand). */
+  band?: boolean
+  rows: Shortcut[]
+}
+
+/** Single source of truth for the operator shortcut map — grouped by what each
+ *  key acts on, with the three keys that change who's talking set apart in their
+ *  own band. Rendered in the help dialog; the handler below is the matching
+ *  switch. Matches design_handoff "Keyboard shortcuts dialog · 1A". */
+export const SHORTCUT_GROUPS: ShortcutGroup[] = [
+  {
+    title: 'The call',
+    rows: [
+      { keys: ['Space', 'K'], label: 'Play / pause the call', alt: true },
+      { keys: ['←', '→'], label: 'Seek', when: 'waveform focused' },
+      { keys: ['M'], label: 'Mute / unmute' },
+      { keys: ['S'], label: 'Speaker on / off' },
+    ],
+  },
+  {
+    title: 'Screen',
+    rows: [
+      { keys: ['B'], label: 'Widen / narrow the booking record' },
+      { keys: ['Esc'], label: 'Close a dialog', when: 'at a checkpoint, take over' },
+      { keys: ['?'], label: 'Show keyboard shortcuts' },
+    ],
+  },
+  {
+    title: 'Changes who is talking',
+    band: true,
+    rows: [
+      { keys: ['T'], label: 'Take over the call', when: 'AI in control' },
+      { keys: ['H'], label: 'Hand back to the AI', when: 'you in control' },
+      { keys: ['E'], label: 'End the call' },
+    ],
+  },
 ]
+
+/** Flat list of every shortcut (kept for reference / any external consumer). */
+export const SHORTCUTS: Shortcut[] = SHORTCUT_GROUPS.flatMap((g) => g.rows)
 
 export interface ShortcutHandlers {
   /** A dialog/checkpoint is open — suppress global shortcuts (the modal owns the keyboard). */
