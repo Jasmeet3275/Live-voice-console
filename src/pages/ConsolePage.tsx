@@ -266,12 +266,12 @@ function DemoRail({ scenarioId, onScenario, onRestart }: { scenarioId: string; o
         value={scenarioId}
         onValueChange={onScenario}
         options={scenarios.map((s) => ({ value: s.id, label: s.label }))}
-        className="h-7 w-auto rounded-lg border-border bg-surface-2 px-2.5 text-[12px] data-[state=open]:border-text"
+        className="h-7 w-auto min-w-[80px] max-w-[210px] shrink rounded-lg border-border bg-surface-2 px-2.5 text-[12px] data-[state=open]:border-text"
       />
       <button
         onClick={clock.toggle}
         disabled={clock.ended}
-        className="flex items-center gap-1.5 rounded-lg bg-text px-2.5 py-1.5 text-[11.5px] font-semibold text-text-inverse transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg bg-text px-2.5 py-1.5 text-[11.5px] font-semibold text-text-inverse transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {clock.playing ? <Pause size={12} className="fill-current" /> : <Play size={12} className="fill-current" />}
         {startLabel}
@@ -441,7 +441,7 @@ function ConsoleHeader({ onShowShortcuts }: { onShowShortcuts: () => void }) {
               <ThemeToggle />
             </div>
             {started && (
-              <WaveformTrack height={30} progress={clock.progress} onSeek={(f) => clock.seek(f * clock.duration)} />
+              <WaveformTrack height={20} progress={clock.progress} onSeek={(f) => clock.seek(f * clock.duration)} />
             )}
           </div>
         )}
@@ -755,7 +755,7 @@ function ConsoleShell({
           </CollapsedRail>
         )}
 
-        <main id="conversation" aria-label="Call conversation" className="relative min-h-0 flex-1">
+        <main id="conversation" aria-label="Call conversation" className="relative min-h-0 min-w-0 flex-1">
           <div className="h-full overflow-auto">
             <Feed over={over} onTakeOver={takeOver} onOpenBooking={openBooking} />
           </div>

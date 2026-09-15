@@ -37,7 +37,7 @@ function OptionCard({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'flex min-w-[190px] flex-1 flex-col rounded-xl p-3 text-left transition-transform duration-150 hover:-translate-y-0.5',
+        'flex w-full flex-col rounded-xl p-3 text-left transition-transform duration-150 hover:-translate-y-0.5 sm:w-auto sm:min-w-[190px] sm:flex-1',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
         active
           ? darkActive ? 'border-[1.5px] border-text bg-text' : 'border-[1.5px] border-accent bg-accent-subtle'

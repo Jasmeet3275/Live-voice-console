@@ -39,18 +39,18 @@ export function AgentSteps({
         aria-expanded={open}
         className={cn('flex w-full items-center gap-2.5 text-left', open && 'border-b border-[rgba(34,31,28,0.07)] pb-1.5')}
       >
-        <span className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-text-muted">Agent steps</span>
-        <span className="text-[11.5px] text-text-muted">{summary}</span>
-        <span className="ml-auto text-[11px] text-text-muted">{open ? 'hide' : 'show'}</span>
+        <span className="shrink-0 text-[9.5px] font-bold uppercase tracking-[0.12em] text-text-muted">Agent steps</span>
+        <span className="min-w-0 flex-1 truncate text-[11.5px] text-text-muted">{summary}</span>
+        <span className="shrink-0 text-[11px] text-text-muted">{open ? 'hide' : 'show'}</span>
       </button>
       {open && (
         <div>
           {steps.map((s) => (
             <div key={s.name} className="flex items-center gap-2.5 py-[7px]">
               <span className="h-[7px] w-[7px] shrink-0 rounded-full bg-border-strong" />
-              <span className="shrink-0 text-[12px] font-semibold text-text-2">{s.name}</span>
+              <span className="max-w-[52%] shrink-0 truncate text-[12px] font-semibold text-text-2">{s.name}</span>
               <span className="min-w-0 flex-1 truncate text-[11.5px] text-text-muted">{s.detail}</span>
-              <span className="tabular shrink-0 text-[11px] text-text-muted">{s.ms}</span>
+              {s.ms && <span className="tabular shrink-0 text-[11px] text-text-muted">{s.ms}</span>}
             </div>
           ))}
         </div>

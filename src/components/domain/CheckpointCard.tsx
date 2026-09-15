@@ -57,10 +57,10 @@ export function CheckpointCard({
   return (
     <div className={cn('animate-rise overflow-hidden rounded-[15px] border-[1.5px] bg-surface', t.card, indent && 'ml-[37px]', className)}>
       <div className={cn('flex items-center gap-2.5 border-b px-4 py-2.5', t.head)}>
-        <span className={cn('h-2 w-2 rounded-full animate-breathe', t.dot)} />
-        <span className={cn('text-[10px] font-bold uppercase tracking-[0.11em]', t.text)}>{label}</span>
-        {stage && <span className={cn('text-[12.5px]', t.sub)}>{stage}</span>}
-        {cost && <span className={cn('ml-auto text-[11.5px]', t.sub)}>{cost}</span>}
+        <span className={cn('h-2 w-2 shrink-0 rounded-full animate-breathe', t.dot)} />
+        <span className={cn('shrink-0 text-[10px] font-bold uppercase tracking-[0.11em]', t.text)}>{label}</span>
+        {stage && <span className={cn('min-w-0 flex-1 truncate text-[12.5px]', t.sub)}>{stage}</span>}
+        {cost && <span className={cn('ml-auto shrink-0 text-[11.5px]', t.sub)}>{cost}</span>}
       </div>
       <div className="p-4">{children}</div>
     </div>
