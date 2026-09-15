@@ -129,25 +129,47 @@ export class CallDirector implements ClockController {
     if (!info) return
     const { gate } = info
     const isAlt = Boolean(gate.awaitAlt && cmd.type === gate.awaitAlt)
-    if (cmd.type !== gate.await && !isAlt) return
+    const isThird = Boolean(gate.awaitThird && cmd.type === gate.awaitThird)
+    if (cmd.type !== gate.await && !isAlt && !isThird) return
 
-    if (isAlt) {
-      gate.onResolveAlt?.forEach((e) => this.emit(e))
-    } else if (gate.onResolveWithInput) {
-      const input = cmd.type === 'correctWord' ? cmd.chosen : cmd.type === 'selectSlot' ? cmd.slotId : ''
-      gate.onResolveWithInput(input).forEach((e) => this.emit(e))
-    } else {
-      gate.onResolve?.forEach((e) => this.emit(e))
+    this.awaitingGate = undefined
+    this.suspended = false
+
+    if (gate.paced) {
+      // The branch is authored as relative-delay beats (see `beats(...)`). Close
+      // the checkpoint now, then merge the beats onto the live timeline so they
+      // play out one at a time via the normal emission loop — same delay logic as
+      // the rest of the call.
+      const branch = (isThird ? gate.onResolveThird : isAlt ? gate.onResolveAlt : gate.onResolve) ?? []
+      this.emit({ type: 'input.cleared' })
+      this.scheduleBeats(branch as TimelineItem[])
+      this.notify()
+      return
     }
+
+    const events: ServerEvent[] =
+      isThird ? (gate.onResolveThird as ServerEvent[]) ?? []
+      : isAlt ? (gate.onResolveAlt as ServerEvent[]) ?? []
+      : gate.onResolveWithInput ? gate.onResolveWithInput(cmd.type === 'correctWord' ? cmd.chosen : cmd.type === 'selectSlot' ? cmd.slotId : '', cmd)
+      : (gate.onResolve as ServerEvent[]) ?? []
+
+    events.forEach((e) => this.emit(e))
     this.emit({ type: 'input.cleared' })
 
     // The call kept playing while the operator decided; shift the remaining
     // timeline by that wait so the rest resumes with its authored pacing.
     this.rebaseRemaining(this.elapsed - info.gateDelay)
-    this.awaitingGate = undefined
-    this.suspended = false
     this.advance()
     this.notify()
+  }
+
+  /** Merge a branch's relative-delay beats onto the timeline, offset to now, so
+   *  the tick loop emits them at their authored times (the clock is running). */
+  private scheduleBeats(beats: TimelineItem[]) {
+    for (const b of beats) this.items.push({ delay: this.elapsed + b.delay, event: b.event })
+    this.items.sort((a, b) => a.delay - b.delay)
+    const last = this.items.at(-1)?.delay ?? 0
+    this.duration = Math.max(this.duration, last + END_TAIL)
   }
 
   destroy() {

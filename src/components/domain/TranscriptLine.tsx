@@ -1,5 +1,4 @@
 import { Fragment } from 'react'
-import { Bot, User } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { ConfidenceWord, type TranscriptWord } from './ConfidenceWord'
 
@@ -18,16 +17,14 @@ export interface TranscriptLineProps {
   className?: string
 }
 
-const speakerConfig: Record<
-  TranscriptSpeaker,
-  { name: string; Icon: typeof Bot; badge: string }
-> = {
-  caller: { name: 'Caller', Icon: User, badge: 'bg-info-subtle text-info' },
-  ai: { name: 'Zoca AI', Icon: Bot, badge: 'bg-accent-subtle text-accent' },
+const speakerConfig: Record<TranscriptSpeaker, { name: string }> = {
+  caller: { name: 'Caller' },
+  ai: { name: 'Zoca AI' },
 }
 
-/** One speaker turn in the live transcript. Words render via ConfidenceWord so
- *  uncertain tokens (e.g. "fade") are visibly flagged and correctable inline. */
+/** One speaker turn in the live transcript, as an asymmetric chat bubble (AI
+ *  left with a teal avatar, caller mirrored on the right). Words render via
+ *  ConfidenceWord so uncertain tokens (e.g. "fade") are flagged and correctable. */
 export function TranscriptLine({
   speaker,
   words,
@@ -39,47 +36,47 @@ export function TranscriptLine({
   className,
 }: TranscriptLineProps) {
   const cfg = speakerConfig[speaker]
-  const { Icon } = cfg
+  const isAi = speaker === 'ai'
 
-  return (
+  const meta = (
+    <div className={cn('mb-1.5 flex items-baseline gap-2', !isAi && 'flex-row-reverse')}>
+      <span className="text-[12.5px] font-semibold text-text">{name ?? cfg.name}</span>
+      {time && <span className="tabular text-[11px] text-text-muted">{time}</span>}
+    </div>
+  )
+
+  const bubble = (
     <div
       className={cn(
-        'flex gap-3 rounded-lg p-2 transition-colors',
-        active && 'bg-surface-2',
-        className,
+        'px-3.5 py-2.5 text-[13.5px] leading-[1.55] text-text-secondary',
+        isAi
+          ? 'rounded-[4px_13px_13px_13px] border border-border bg-surface'
+          : 'max-w-[86%] rounded-[13px_4px_13px_13px] bg-bubble-caller',
+        active && 'ring-2 ring-accent-border',
       )}
     >
+      {words.map((w, i) => (
+        <Fragment key={i}>
+          <ConfidenceWord
+            word={w}
+            readOnly={readOnly}
+            onCorrect={(chosen) => onCorrectWord?.(i, chosen)}
+          />
+          {i < words.length - 1 ? ' ' : ''}
+        </Fragment>
+      ))}
+    </div>
+  )
+
+  return (
+    <div className={cn('flex gap-2.5', !isAi && 'flex-row-reverse', className)}>
       <span
         aria-hidden
-        className={cn(
-          'mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full',
-          cfg.badge,
-        )}
-      >
-        <Icon size={15} />
-      </span>
-
-      <div className="min-w-0 flex-1">
-        <div className="mb-0.5 flex items-center gap-2">
-          <span className="text-caption font-semibold text-text">
-            {name ?? cfg.name}
-          </span>
-          {time && (
-            <span className="tabular text-micro text-text-muted">{time}</span>
-          )}
-        </div>
-        <p className="text-body leading-relaxed text-text">
-          {words.map((w, i) => (
-            <Fragment key={i}>
-              <ConfidenceWord
-                word={w}
-                readOnly={readOnly}
-                onCorrect={(chosen) => onCorrectWord?.(i, chosen)}
-              />
-              {i < words.length - 1 ? ' ' : ''}
-            </Fragment>
-          ))}
-        </p>
+        className={cn('mt-0.5 h-[26px] w-[26px] shrink-0 rounded-[9px]', isAi ? 'bg-accent' : 'bg-surface-2')}
+      />
+      <div className={cn('flex min-w-0 flex-1 flex-col', !isAi && 'items-end')}>
+        {meta}
+        {bubble}
       </div>
     </div>
   )

@@ -155,6 +155,28 @@ describe('CallStore', () => {
     expect(t.sent).toEqual([{ type: 'mute', on: true }, { type: 'takeOver' }])
   })
 
+  it('takeOver appends a persistent notice; release keeps it and marks it resolved', () => {
+    const t = new FakeTransport()
+    const store = new CallStore(t)
+    store.connect()
+    t.emit({ type: 'call.state', connected: true })
+
+    store.send({ type: 'takeOver' })
+    const afterTakeOver = store.getSnapshot().feed.filter((i) => i.kind === 'notice' && i.variant === 'took-over')
+    expect(afterTakeOver).toHaveLength(1)
+    expect(afterTakeOver[0]).toMatchObject({ variant: 'took-over', resolved: false })
+
+    // A second take-over while already holding must not add a duplicate marker.
+    store.send({ type: 'takeOver' })
+    expect(store.getSnapshot().feed.filter((i) => i.kind === 'notice' && i.variant === 'took-over')).toHaveLength(1)
+
+    store.send({ type: 'release' })
+    expect(store.getSnapshot().operatorInControl).toBe(false)
+    const afterRelease = store.getSnapshot().feed.filter((i) => i.kind === 'notice' && i.variant === 'took-over')
+    expect(afterRelease).toHaveLength(1) // still in the thread as history
+    expect(afterRelease[0]).toMatchObject({ resolved: true })
+  })
+
   it('endCall optimistically ends the call and clears any pending checkpoint', () => {
     const t = new FakeTransport()
     const store = new CallStore(t)

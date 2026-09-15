@@ -37,15 +37,15 @@ export function Select({
       <RadixSelect.Trigger
         aria-label={ariaLabel}
         className={cn(
-          'inline-flex h-10 w-full items-center justify-between gap-2 rounded-md border border-border-strong bg-surface px-3 text-sm text-text',
-          'hover:bg-surface-hover data-[placeholder]:text-text-muted',
+          'group inline-flex h-10 w-full items-center justify-between gap-2 rounded-md border border-border-strong bg-surface px-3 text-sm text-text transition-colors',
+          'hover:bg-surface-2 data-[placeholder]:text-text-muted data-[state=open]:border-accent',
           'disabled:opacity-50 disabled:pointer-events-none',
           className,
         )}
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon>
-          <ChevronDown size={16} className="text-text-muted" />
+          <ChevronDown size={16} className="text-text-muted transition-transform duration-200 group-data-[state=open]:rotate-180" />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
       <RadixSelect.Portal>

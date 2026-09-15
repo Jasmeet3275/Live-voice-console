@@ -49,6 +49,7 @@ function runToEnd(scenarioId: string) {
         : r.request.kind === 'selectSlot' ? { type: 'selectSlot', slotId: 's1' }
         : r.request.kind === 'confirmBooking' ? { type: 'confirmBooking' }
         : r.request.kind === 'payment' ? { type: 'chargeDeposit' }
+        : r.request.kind === 'callerDropped' ? { type: 'callBack' }
         : { type: 'takeOver' }
       d.onCommand(cmd)
     }
@@ -118,6 +119,145 @@ describe('CallDirector — human-in-the-loop over the wire', () => {
     d.onCommand({ type: 'takeOver' })
     expect(events.some((e) => e.type === 'input.cleared')).toBe(true)
     expect(d.getState().playing).toBe(true) // clock keeps running
+  })
+})
+
+/** Drive a scenario, resolving each checkpoint with the command `resolve(kind)` returns. */
+function runWith(scenarioId: string, resolve: (kind: string) => ClientCommand) {
+  const { d, events } = make(scenarioId)
+  d.play()
+  let handled = 0
+  for (let i = 0; i < 1500; i++) {
+    pump(50)
+    const reqs = events.filter((e) => e.type === 'input.requested')
+    if (reqs.length > handled) {
+      handled = reqs.length
+      const r = reqs[reqs.length - 1]
+      if (r.type === 'input.requested') d.onCommand(resolve(r.request.kind))
+    }
+  }
+  return { d, events }
+}
+
+describe('CallDirector — alternate checkpoint paths (extended mock)', () => {
+  it('correctWord "ask the caller" (askCaller) resolves the fade checkpoint and classifies intent', () => {
+    const { d, events } = make('low-confidence')
+    d.play()
+    pump(3200)
+    expect(kindsOf(events)).toContain('correctWord')
+    d.onCommand({ type: 'askCaller' })
+    expect(events.some((e) => e.type === 'input.cleared')).toBe(true)
+    expect(events.some((e) => e.type === 'step.started' && e.step.type === 'classify_intent')).toBe(true)
+  })
+
+  it('confirmBooking resolves via waiveDeposit (book, skip deposit)', () => {
+    const { events } = runWith('happy', (kind) =>
+      kind === 'selectSlot' ? { type: 'selectSlot', slotId: 's1' }
+      : kind === 'confirmBooking' ? { type: 'waiveDeposit' }
+      : { type: 'takeOver' },
+    )
+    expect(events.some((e) => e.type === 'step.updated' && /waived/i.test(e.detail ?? ''))).toBe(true)
+    expect(events.some((e) => e.type === 'booking.confirmed')).toBe(true)
+    expect(events.some((e) => e.type === 'call.state' && e.ended === true)).toBe(true)
+  })
+
+  it('confirmBooking resolves via readBack (read it back first)', () => {
+    const { events } = runWith('happy', (kind) =>
+      kind === 'selectSlot' ? { type: 'selectSlot', slotId: 's1' }
+      : kind === 'confirmBooking' ? { type: 'readBack' }
+      : { type: 'takeOver' },
+    )
+    const aiLines = events.filter((e) => e.type === 'transcript.line' && e.line.speaker === 'ai').map((e) => (e.type === 'transcript.line' ? e.line.words.map((w) => w.text).join(' ') : ''))
+    expect(aiLines.some((l) => /lock it in/i.test(l))).toBe(true)
+    expect(events.some((e) => e.type === 'booking.confirmed')).toBe(true)
+  })
+
+  it('payment resolves via askForCard (ask for another card), then continues to confirm', () => {
+    const { events } = runWith('payment-declined', (kind) =>
+      kind === 'selectSlot' ? { type: 'selectSlot', slotId: 's1' }
+      : kind === 'payment' ? { type: 'askForCard' }
+      : kind === 'confirmBooking' ? { type: 'confirmBooking' }
+      : { type: 'takeOver' },
+    )
+    expect(events.some((e) => e.type === 'step.updated' && /another card/i.test(e.detail ?? ''))).toBe(true)
+    expect(events.some((e) => e.type === 'booking.confirmed')).toBe(true)
+  })
+
+  it('handoff resolves via scheduleCallback and ends the call gracefully', () => {
+    const { d, events } = make('service-down')
+    d.play()
+    pump(6000)
+    expect(kindsOf(events)).toContain('handoff')
+    d.onCommand({ type: 'scheduleCallback' })
+    pump(6000) // the branch is paced — it plays out over time
+    expect(events.some((e) => e.type === 'input.cleared')).toBe(true)
+    expect(events.some((e) => e.type === 'call.state' && e.ended === true)).toBe(true)
+  })
+
+  it('handoff resolves via sendBookingLink and ends the call gracefully', () => {
+    const { d, events } = make('service-down')
+    d.play()
+    pump(6000)
+    d.onCommand({ type: 'sendBookingLink' })
+    pump(6000) // the branch is paced — it plays out over time
+    expect(events.some((e) => e.type === 'step.started' && e.step.type === 'notify')).toBe(true)
+    expect(events.some((e) => e.type === 'call.state' && e.ended === true)).toBe(true)
+  })
+
+  it('caller drop opens a checkpoint whose branch drives the rest of the call', () => {
+    const pickSlot = { type: 'selectSlot', slotId: 's1' } as const
+
+    // Reaches the drop and asks the operator how to recover (not auto-recovered):
+    // resolve the slot pick, but leave the caller-dropped checkpoint open.
+    const probe = runWith('caller-dropped', (k) => (k === 'selectSlot' ? pickSlot : { type: 'mute', on: true }))
+    expect(kindsOf(probe.events)).toContain('callerDropped')
+    expect(probe.events.some((e) => e.type === 'step.started' && e.step.type === 'hold_booking')).toBe(false)
+
+    // Call back → books the appointment and ends confirmed.
+    const back = runWith('caller-dropped', (k) => (k === 'selectSlot' ? pickSlot : { type: 'callBack' }))
+    expect(back.events.some((e) => e.type === 'booking.confirmed')).toBe(true)
+    expect(back.events.some((e) => e.type === 'call.state' && e.ended === true)).toBe(true)
+
+    // Hold + text → holds the booking, no confirmed booking.
+    const held = runWith('caller-dropped', (k) => (k === 'selectSlot' ? pickSlot : { type: 'holdAndText' }))
+    expect(held.events.some((e) => e.type === 'step.started' && e.step.type === 'hold_booking')).toBe(true)
+    expect(held.events.some((e) => e.type === 'booking.confirmed')).toBe(false)
+
+    // Release → nothing saved.
+    const rel = runWith('caller-dropped', (k) => (k === 'selectSlot' ? pickSlot : { type: 'releaseSlot' }))
+    expect(rel.events.some((e) => e.type === 'turn.status' && /released/i.test(e.summary ?? ''))).toBe(true)
+    expect(rel.events.some((e) => e.type === 'booking.confirmed')).toBe(false)
+  })
+
+  it('a paced branch (call back) plays out over time, not all in one tick', () => {
+    const { d, events } = make('caller-dropped')
+    d.play()
+    // Drive to the caller-dropped checkpoint, resolving the slot pick on the way.
+    let slotDone = false
+    for (let i = 0; i < 600; i++) {
+      pump(50)
+      const reqs = events.filter((e) => e.type === 'input.requested')
+      const last = reqs[reqs.length - 1]
+      if (last?.type !== 'input.requested') continue
+      if (last.request.kind === 'selectSlot' && !slotDone) { d.onCommand({ type: 'selectSlot', slotId: 's1' }); slotDone = true }
+      else if (last.request.kind === 'callerDropped') break
+    }
+    const aiLine = () => events.some((e) => e.type === 'transcript.line' && e.line.words.map((w) => w.text).join(' ').match(/lost you/i))
+
+    // Resolve with call back: the checkpoint closes immediately, but the AI's
+    // spoken line has NOT been emitted yet — it is scheduled for later.
+    d.onCommand({ type: 'callBack' })
+    expect(events.some((e) => e.type === 'input.cleared')).toBe(true)
+    expect(aiLine()).toBe(false)
+
+    // A beat later the AI speaks, but the booking hasn't been processed yet.
+    pump(1500)
+    expect(aiLine()).toBe(true)
+    expect(events.some((e) => e.type === 'booking.confirmed')).toBe(false)
+
+    // Only after the rest of the beats play out does the booking complete.
+    pump(8000)
+    expect(events.some((e) => e.type === 'booking.confirmed')).toBe(true)
   })
 })
 

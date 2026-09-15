@@ -2,14 +2,12 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 import type { ButtonVariant } from './Button'
 
-const gloss = 'shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
-
 const variants: Record<ButtonVariant, string> = {
-  primary: `bg-gradient-to-b from-accent to-accent-hover text-accent-fg ${gloss} shadow-e1 hover:brightness-[1.04] hover:shadow-e2`,
+  primary: 'bg-accent border border-accent text-accent-fg hover:bg-accent-hover hover:border-accent-hover',
   secondary:
-    'bg-surface text-text border border-border hover:bg-surface-hover hover:border-border-strong hover:shadow-e1',
-  ghost: 'bg-transparent text-text-secondary hover:bg-surface-2 hover:text-text',
-  danger: `bg-gradient-to-b from-error to-error text-white ${gloss} shadow-e1 hover:brightness-[1.06] hover:shadow-e2`,
+    'bg-surface border border-border-strong text-text hover:bg-surface-2',
+  ghost: 'bg-transparent border border-transparent text-text-secondary hover:bg-surface-2 hover:text-text',
+  danger: 'bg-error border border-error text-white hover:brightness-[0.95]',
 }
 
 const sizes = {

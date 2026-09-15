@@ -16,20 +16,15 @@ export function applyEvent(call: Call, e: ServerEvent): Call {
         connected: e.connected ?? call.connected,
         ended: e.ended ?? call.ended,
       }
-      // Mark the end of the call. A graceful agent close (ended:true) reads as a
-      // neutral "Call ended"; an unexpected caller drop (connected:false only)
-      // reads as an error.
-      if (call.connected && e.connected === false && !call.ended) {
-        const graceful = e.ended === true
-        next.feed = [
-          ...call.feed,
-          {
-            kind: 'notice',
-            id: `notice-${call.feed.length}`,
-            text: graceful ? 'Call ended' : 'Caller disconnected — call ended',
-            tone: graceful ? 'neutral' : 'error',
-          },
-        ]
+      // The call ending (ended:true, however it got there — even after an earlier
+      // drop) marks a terminal "ended" notice. A caller hanging up mid-call
+      // (connected:false, not ended) marks the "dropped by the caller" notice.
+      const nowEnding = e.ended === true && !call.ended
+      const nowDropped = call.connected && e.connected === false && e.ended !== true && !call.ended
+      if (nowEnding) {
+        next.feed = [...call.feed, { kind: 'notice', id: `notice-${call.feed.length}`, text: 'Call ended', tone: 'neutral', variant: 'ended' }]
+      } else if (nowDropped) {
+        next.feed = [...call.feed, { kind: 'notice', id: `notice-${call.feed.length}`, text: 'Caller disconnected — call ended', tone: 'error', variant: 'dropped-caller' }]
       }
       return next
     }
@@ -166,17 +161,30 @@ function applyCommandOptimistic(call: Call, cmd: ClientCommand): Call {
     case 'speaker':
       return { ...call, speakerOn: cmd.on }
     case 'takeOver':
+      if (call.operatorInControl) return call // already holding — no duplicate marker
       return {
         ...call,
         operatorInControl: true,
         pending: undefined, // abandon any open checkpoint when the operator steps in
-        feed: [...call.feed, { kind: 'notice', id: `notice-${call.feed.length}`, text: 'You took over the call', tone: 'neutral' }],
+        // A take-over is a fact about the call, not a decision — append it to the
+        // feed so it stays as history. It renders live (pulsing, Hand back) while
+        // the operator holds, then flips to a static marker on release.
+        feed: [
+          ...call.feed,
+          { kind: 'notice', id: `notice-${call.feed.length}`, text: 'You took over the line', tone: 'neutral', variant: 'took-over', resolved: false },
+        ],
       }
     case 'release':
+      // Control returns to the AI, but the take-over stays in the thread —
+      // mark the open take-over notice resolved so it renders as a static marker.
       return {
         ...call,
         operatorInControl: false,
-        feed: [...call.feed, { kind: 'notice', id: `notice-${call.feed.length}`, text: 'Handed back to the AI', tone: 'neutral' }],
+        feed: call.feed.map((it) =>
+          it.kind === 'notice' && it.variant === 'took-over' && !it.resolved
+            ? { ...it, resolved: true }
+            : it,
+        ),
       }
     case 'operatorBook':
       return {
@@ -204,7 +212,7 @@ function applyCommandOptimistic(call: Call, cmd: ClientCommand): Call {
         pending: undefined, // close any open checkpoint when the call ends
         feed: [
           ...call.feed,
-          { kind: 'notice', id: `notice-${call.feed.length}`, text: 'Call ended by operator', tone: 'neutral' },
+          { kind: 'notice', id: `notice-${call.feed.length}`, text: 'Call ended by operator', tone: 'neutral', variant: 'ended-operator' },
         ],
       }
     case 'selectSlot':

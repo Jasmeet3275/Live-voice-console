@@ -1,139 +1,168 @@
-/* Design tokens — Calm Operational Console. Single source of truth for theme.
-   Light = :root (default). Dark = [data-theme="dark"]. */
+/* Design tokens — Zoca Front Desk (handoff design system, official values).
+   Three colour roles: warm neutrals = what the system knows, teal = the AI's
+   voice + its recommendation, amber = a human must act, red = danger only.
+   Light = :root. Dark = [data-theme="dark"] (brighter accents for 4.5:1;
+   teal-button text flips to dark ink; take-over frame inverts via bg-text). */
 
 :root {
   color-scheme: light;
 
-  /* base surfaces */
-  --bg-app: #f6f8fb;
-  --surface: #ffffff;
-  --surface-2: #f1f5f9;
-  --surface-hover: #f8fafc;
+  --bg-app: #f4efe8;
+  --surface: #fffdfa;
+  --surface-2: #f1ede6;
+  --surface-hover: #ece7df;
 
-  /* borders */
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
+  --border: rgba(34, 31, 28, 0.1);
+  --border-strong: rgba(34, 31, 28, 0.3);
 
-  /* text */
-  --text: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text: #221f1c;
+  --text-2: #3a352f;
+  --text-secondary: #57514a;
+  --text-muted: #6b645b;
   --text-inverse: #ffffff;
 
-  /* accent (teal) */
-  --accent: #0d9488;
-  --accent-hover: #0f766e;
+  /* teal — the AI's voice + recommendation */
+  --accent: #1f7d6e;
+  --accent-hover: #164f45;
   --accent-fg: #ffffff;
-  --accent-subtle: #f0fdfa;
-  --accent-border: #99f6e4;
+  --accent-subtle: oklch(0.972 0.022 170);
+  --accent-border: #bcd9d2;
 
-  /* running / info (blue) */
-  --info: #2563eb;
-  --info-subtle: #eff6ff;
-  --info-border: #bfdbfe;
+  /* running / info → teal */
+  --info: #1f7d6e;
+  --info-subtle: oklch(0.972 0.022 170);
+  --info-border: #bcd9d2;
 
-  /* success (green) */
-  --success: #16a34a;
-  --success-subtle: #f0fdf4;
-  --success-border: #bbf7d0;
+  /* success / booked → teal text on tint */
+  --success: #1a6357;
+  --success-subtle: oklch(0.972 0.022 170);
+  --success-border: #bcd9d2;
 
-  /* warning (amber) */
-  --warning: #b45309;
-  --warning-solid: #f59e0b;
-  --warning-subtle: #fffbeb;
-  --warning-border: #fde68a;
+  /* warning — a human should look → amber */
+  --warning: #6b4a0d;
+  --warning-solid: #d9a53c;
+  --warning-subtle: oklch(0.965 0.04 82);
+  --warning-border: rgba(176, 117, 20, 0.55);
 
-  /* error (red) */
-  --error: #dc2626;
-  --error-subtle: #fef2f2;
-  --error-border: #fecaca;
+  /* error — danger only → red */
+  --error: #c0392b;
+  --error-subtle: #f7e9e5;
+  --error-border: rgba(192, 57, 43, 0.3);
 
-  /* waiting — human-in-the-loop (violet) */
-  --waiting: #7c3aed;
-  --waiting-subtle: #f5f3ff;
-  --waiting-border: #ddd6fe;
+  /* waiting — held, you must act → amber */
+  --waiting: #6b4a0d;
+  --waiting-subtle: oklch(0.965 0.04 82);
+  --waiting-border: rgba(176, 117, 20, 0.55);
 
-  /* focus */
-  --focus-ring: #0d9488;
+  --focus-ring: #1f7d6e;
 
-  /* call dock — macOS-style frosted glass (translucent; blurs content behind) */
-  --dock-bg: rgba(255, 255, 255, 0.55);
-  --dock-border: rgba(15, 23, 42, 0.08);
-  --dock-btn: rgba(15, 23, 42, 0.06); /* translucent grey circle */
+  /* caller speech bubble (stays the lighter of the two speakers) */
+  --bubble-caller: #e9e3d9;
+
+  /* waveform — coloured by speaker; kept as explicit tokens so dark mode can
+     brighten without the straight-invert "vibration" the handoff warns about. */
+  --wave-ai-loud: #1f7d6e;
+  --wave-ai-quiet: #8ebcb2;
+  --wave-caller-loud: #c6bcac;
+  --wave-caller-quiet: #ddd5c9;
+  --wave-flag-loud: #d9a53c;
+  --wave-flag-quiet: #e6c98a;
+  --wave-silence: #ddd5c9;
+  --wave-flag-label: #8a5c0f;
+  --wave-flag-label-fg: #ffffff;
+
+  /* call dock */
+  --dock-bg: rgba(255, 253, 250, 0.82);
+  --dock-border: rgba(34, 31, 28, 0.1);
+  --dock-btn: #f1ede6;
   --dock-btn-border: transparent;
-  --dock-btn-hover: rgba(15, 23, 42, 0.11);
-  --dock-btn-fg: #475569;
-  --dock-btn-active-bg: #ffffff; /* toggled "on" = solid white (Control Center) */
-  --dock-btn-active-fg: #1e293b;
-  --dock-transport-bg: #ffffff;
-  --dock-transport-fg: #1e293b;
-  --dock-wave-upcoming: rgba(15, 23, 42, 0.18);
+  --dock-btn-hover: #ece7df;
+  --dock-btn-fg: #57514a;
+  --dock-btn-active-bg: #221f1c;
+  --dock-btn-active-fg: #ffffff;
+  --dock-transport-bg: #221f1c;
+  --dock-transport-fg: #ffffff;
+  --dock-wave-upcoming: rgba(34, 31, 28, 0.18);
 
   /* elevation */
-  --elev-1: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
-  --elev-2: 0 2px 8px rgba(15, 23, 42, 0.08);
-  --elev-3: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --elev-1: 0 1px 2px rgba(34, 31, 28, 0.05);
+  --elev-2: 0 6px 16px -10px rgba(34, 31, 28, 0.22);
+  --elev-3: 0 20px 50px -26px rgba(34, 31, 28, 0.34);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --bg-app: #0b1220;
-  --surface: #0f172a;
-  --surface-2: #1e293b;
-  --surface-hover: #172033;
+  --bg-app: #1c1a16;
+  --surface: #24211c;
+  --surface-2: #2b2823;
+  --surface-hover: #322e28;
 
-  --border: #1e293b;
-  --border-strong: #334155;
+  --border: rgba(242, 237, 228, 0.11);
+  --border-strong: rgba(242, 237, 228, 0.28);
 
-  --text: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #0b1220;
+  --text: #f2ede4;
+  --text-2: #ddd6ca;
+  --text-secondary: #b8b0a4;
+  --text-muted: #948c81;
+  --text-inverse: #14120e;
 
-  --accent: #2dd4bf;
-  --accent-hover: #5eead4;
-  --accent-fg: #042f2e;
-  --accent-subtle: #0c2c2a;
-  --accent-border: #115e59;
+  --accent: #4fb8a4;
+  --accent-hover: #8fdcca;
+  --accent-fg: #14120e;
+  --accent-subtle: oklch(0.3 0.045 170);
+  --accent-border: rgba(79, 184, 164, 0.35);
 
-  --info: #60a5fa;
-  --info-subtle: #0e1e3a;
-  --info-border: #1e3a8a;
+  --info: #4fb8a4;
+  --info-subtle: oklch(0.3 0.045 170);
+  --info-border: rgba(79, 184, 164, 0.35);
 
-  --success: #4ade80;
-  --success-subtle: #0c2818;
-  --success-border: #166534;
+  --success: #8fdcca;
+  --success-subtle: oklch(0.3 0.045 170);
+  --success-border: rgba(79, 184, 164, 0.35);
 
-  --warning: #fbbf24;
-  --warning-solid: #f59e0b;
-  --warning-subtle: #2a1e05;
-  --warning-border: #854d0e;
+  --warning: #f2d493;
+  --warning-solid: #e8bb63;
+  --warning-subtle: oklch(0.31 0.05 82);
+  --warning-border: rgba(232, 187, 99, 0.5);
 
-  --error: #f87171;
-  --error-subtle: #2a0f10;
-  --error-border: #991b1b;
+  --error: #e1614f;
+  --error-subtle: #331a16;
+  --error-border: rgba(225, 97, 79, 0.35);
 
-  --waiting: #a78bfa;
-  --waiting-subtle: #1e1533;
-  --waiting-border: #5b21b6;
+  --waiting: #f2d493;
+  --waiting-subtle: oklch(0.31 0.05 82);
+  --waiting-border: rgba(232, 187, 99, 0.5);
 
-  --focus-ring: #2dd4bf;
+  --focus-ring: #4fb8a4;
 
-  /* call dock — macOS-style frosted glass (dark) */
-  --dock-bg: rgba(20, 29, 47, 0.5);
-  --dock-border: rgba(255, 255, 255, 0.08);
-  --dock-btn: rgba(255, 255, 255, 0.08); /* translucent circle */
+  --bubble-caller: #322e28;
+
+  /* waveform — brightened, quiet bars carried as low-alpha of the same hue so
+     past/quiet spans read as recessive rather than vibrating (handoff §0b). */
+  --wave-ai-loud: #4fb8a4;
+  --wave-ai-quiet: rgba(79, 184, 164, 0.45);
+  --wave-caller-loud: #b8b0a4;
+  --wave-caller-quiet: rgba(148, 140, 129, 0.5);
+  --wave-flag-loud: #e8bb63;
+  --wave-flag-quiet: rgba(232, 187, 99, 0.5);
+  --wave-silence: rgba(148, 140, 129, 0.3);
+  --wave-flag-label: #e8bb63;
+  --wave-flag-label-fg: #14120e;
+
+  --dock-bg: rgba(36, 33, 28, 0.72);
+  --dock-border: rgba(242, 237, 228, 0.11);
+  --dock-btn: rgba(242, 237, 228, 0.06);
   --dock-btn-border: transparent;
-  --dock-btn-hover: rgba(255, 255, 255, 0.15);
-  --dock-btn-fg: #cbd5e1;
-  --dock-btn-active-bg: #ffffff; /* toggled "on" = solid white */
-  --dock-btn-active-fg: #1e293b;
-  --dock-transport-bg: #ffffff;
-  --dock-transport-fg: #1e293b;
-  --dock-wave-upcoming: rgba(255, 255, 255, 0.2);
+  --dock-btn-hover: rgba(242, 237, 228, 0.12);
+  --dock-btn-fg: #b8b0a4;
+  --dock-btn-active-bg: #f2ede4;
+  --dock-btn-active-fg: #221f1c;
+  --dock-transport-bg: #f2ede4;
+  --dock-transport-fg: #221f1c;
+  --dock-wave-upcoming: rgba(242, 237, 228, 0.2);
 
-  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --elev-2: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --elev-3: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elev-2: 0 10px 26px -14px rgba(0, 0, 0, 0.5);
+  --elev-3: 0 24px 60px -30px rgba(0, 0, 0, 0.7);
 }

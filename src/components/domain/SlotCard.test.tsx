@@ -38,10 +38,10 @@ describe('SlotCard', () => {
     expect(screen.getByRole('radio')).toHaveAttribute('aria-checked', 'true')
   })
 
-  it('is disabled and marked "Just booked" when unavailable', () => {
+  it('is disabled and marked "just taken" when unavailable', () => {
     const onSelect = vi.fn()
     render(<SlotCard slot={{ ...slot, unavailable: true }} onSelect={onSelect} />)
-    expect(screen.getByText('Just booked')).toBeInTheDocument()
+    expect(screen.getByText('just taken')).toBeInTheDocument()
     const el = screen.getByRole('radio')
     expect(el).toBeDisabled()
     fireEvent.click(el)

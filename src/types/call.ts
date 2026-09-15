@@ -85,6 +85,14 @@ export type FeedItem =
       id: string
       text: string
       tone: 'neutral' | 'error'
+      /** Terminal notices render as a rich inline ThreadNotice (rendered where
+       *  the event happened), not the plain pill. `took-over` is not terminal —
+       *  it stays in the thread as call history and flips live → static on
+       *  hand-back. */
+      variant?: 'dropped-caller' | 'ended' | 'ended-operator' | 'took-over'
+      /** For `took-over`: false while the operator holds the line (renders live —
+       *  pulsing dot, timer, Hand back), true once control returns (static marker). */
+      resolved?: boolean
     }
 
 export interface DraftBooking {
@@ -158,13 +166,24 @@ export type ClientCommand =
   | { type: 'mute'; on: boolean }
   | { type: 'speaker'; on: boolean }
   | { type: 'correctWord'; lineId: string; wordIndex: number; chosen: string }
-  | { type: 'selectSlot'; slotId: string }
+  | { type: 'selectSlot'; slotId: string; offer?: 'one' | 'both' | 'ask' }
   | { type: 'requireDeposit'; on: boolean }
   | { type: 'chargeDeposit' }
   | { type: 'waiveDeposit' }
   | { type: 'confirmBooking' }
   | { type: 'refreshAvailability' }
   | { type: 'operatorBook'; services: string[]; stylist: string; time: string; deposit?: string }
+  // "Slower / safer" checkpoint paths — the AI stays on the line and does the
+  // extra step aloud instead of committing silently.
+  | { type: 'askCaller' } // re-ask a low-confidence word aloud
+  | { type: 'readBack' } // read the booking back before saving
+  | { type: 'askForCard' } // ask the caller for another card after a decline
+  | { type: 'scheduleCallback' } // queue a desk callback (hand-off)
+  | { type: 'sendBookingLink' } // text the self-serve booking page (hand-off)
+  // Caller-dropped recovery — the operator picks one and the flow branches.
+  | { type: 'callBack' } // redial and resume at the readback
+  | { type: 'holdAndText' } // hold the slot + text a one-tap confirm
+  | { type: 'releaseSlot' } // release the chair, save nothing
 
 export interface CallTransport {
   connect(): void
@@ -183,6 +202,8 @@ export type InputRequest =
   | { kind: 'payment'; title: string; card: string }
   /** Unrecoverable agent error — the operator must take over. Carries the reason. */
   | { kind: 'handoff'; title: string; reason: string; detail?: string }
+  /** The caller hung up mid-booking — the operator chooses how to recover. */
+  | { kind: 'callerDropped'; title: string; service?: string; stylist?: string; time?: string }
 
 /** Pure media/timing plane. Carries only playback state — never control or
  *  human-in-the-loop state (that travels as events into `Call`). In production

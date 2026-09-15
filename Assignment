@@ -1,0 +1,85 @@
+Zoca AI Front Desk Voice to Booking
+Assignment
+
+Build a focused, polished front-end experience for a salon's AI-powered front desk. This assignment
+is about product judgment, interaction design, architecture, reliability, and how you work with AI - not
+raw feature count.
+Timebox 4 to 5 hours
+Submit by Within 48 hours
+Preferred stack React and TypeScript
+AI use Claude or other AI tools are explicitly allowed
+
+The scenario
+A local salon uses Zoca to manage bookings. Its AI Front Desk handles customer calls, but an
+operator should be able to understand what is happening and step in at any moment.
+The incoming request: “Hi, I need a haircut and beard trim tomorrow evening. I prefer someone good
+with fades. What is available?”
+Your product should make this interaction feel calm, informed, and easy to recover when the
+conversation or booking flow goes wrong.
+What to build
+Build one connected flow with the three parts below. Use realistic mock data and a simulated
+backend where useful. Production telephony and speech-to-text are not required.
+1 Live call console
+● An incoming call state with caller details, relevant previous visits, and a visible recording or
+privacy indicator.
+● A credible audio waveform or playback progress indicator. A short supplied or self-created audio
+clip is welcome; a simulated playback is also fine.
+● A live transcript that progresses as the call plays, with speaker turns and a visible confidence
+signal.
+● AI-detected intent: requested services, preferred time, and stylist preference.
+● Controls for Take Over, mute, speaker, and ending the call. The human handoff must feel
+deliberate and clear.
+
+2 AI booking recommendation
+● Recommend 2 or 3 booking slots based on service duration, staff capability, and availability.
+● Explain why the top recommendation is a good fit, rather than showing a black-box answer.
+● Let the operator change the service, stylist, time, or deposit requirement before confirming.
+● Handle a slot becoming unavailable while the operator is deciding.
+3 Booking confirmation
+● Confirm the appointment and optionally collect a deposit.
+● Show a concise call summary and the customer-facing confirmation.
+● Design failure states for payment failures, low transcript confidence, staff conflicts, and the caller
+dropping before confirmation.
+
+Audio and AI details
+We care less about building speech-to-text and more about what the interface does with imperfect
+information. Include at least one moment where the system needs human judgment. For example,
+“fade” could be misheard as “facial”, and the operator should be able to see, correct, and safely
+continue.
+● Show how transcript confidence affects the booking flow.
+● Make the audio state feel connected to the transcript rather than decorative.
+● Avoid exposing secrets, raw customer data, or unsafe actions in the UI.
+Design for real conditions
+The happy path is only half the assignment. Make thoughtful choices for at least the following
+conditions:
+● Desktop and mobile layouts.
+● Loading, empty, and error states.
+● Slow or stale availability data.
+● Keyboard focus and basic accessibility for the primary controls.
+● A clear recovery path when the AI has low confidence or is wrong.
+Working with AI
+Use AI as part of the assignment if it helps you. We want to understand how you direct it, verify its
+output, and retain your own product judgment.
+Include an AI_NOTES.md file: Capture 3 to 5 prompts that materially helped, what you accepted and
+edited, one suggestion you rejected and why, how you verified the work, and one edge case AI helped
+surface.
+
+What to submit
+
+Item What we need
+Repository A GitHub repository with the complete source.
+Live build A deployed URL that we can open without setup.
+Walkthrough A 5-minute Loom showing the flow, key interactions, and one
+
+failure or recovery state.
+
+README Setup instructions, assumptions, trade-offs, and anything we
+
+should know before reviewing.
+AI notes The AI_NOTES.md file described above.
+
+A strong submission
+● Feels like a small but complete product slice, not a collection of disconnected screens.
+● Makes the operator more confident when the AI is uncertain, rather than hiding uncertainty.
+● Uses motion, audio, and visual detail only when they clarify state or improve trust.
+● Explains trade-offs honestly. A polished end-to-end experience beats an overbuilt feature set.

@@ -1,3 +1,7 @@
+/* Public Sans — the handoff font. Remote @import must come first: Tailwind v4
+   inlines `@import 'tailwindcss'`, so any @import after it lands amid real rules
+   and PostCSS rejects it ("@import must precede all other statements"). */
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300..800;1,400&display=swap');
 @import 'tailwindcss';
 @import './styles/tokens.css';
 
@@ -17,6 +21,7 @@
   --color-border-strong: var(--border-strong);
 
   --color-text: var(--text);
+  --color-text-2: var(--text-2);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
   --color-text-inverse: var(--text-inverse);
@@ -48,17 +53,20 @@
   --color-waiting-subtle: var(--waiting-subtle);
   --color-waiting-border: var(--waiting-border);
 
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
+  --radius-sm: 9px;
+  --radius-md: 12px;
+  --radius-lg: 15px;
+  --radius-xl: 18px;
 
   --shadow-e1: var(--elev-1);
   --shadow-e2: var(--elev-2);
   --shadow-e3: var(--elev-3);
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+  --font-sans: 'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     sans-serif;
+
+  /* Domain literal: the caller speech bubble (warm sand in light, warm dark in dark). */
+  --color-bubble-caller: var(--bubble-caller);
 
   /* typography scale (size + line-height) */
   --text-display: 22px;
@@ -140,6 +148,21 @@
 }
 
 /* --- Motion primitives (Radix data-state driven) --- */
+
+/* The design language allows exactly two keyframes:
+   breathe — "something is happening right now" (live/waiting dots only)
+   riseIn  — a surface entering the thread. */
+@keyframes breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-breathe { animation: breathe 1.4s ease-in-out infinite; }
+.animate-rise { animation: riseIn 0.22s ease; }
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -158,6 +181,11 @@
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+/* Operator mic level bars while they hold the line (mobile take-over header). */
+@keyframes eqbar {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
 }
 @keyframes shimmer {
   100% { transform: translateX(100%); }

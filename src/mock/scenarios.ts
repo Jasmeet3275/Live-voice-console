@@ -14,14 +14,24 @@ export interface Gate {
   await: ClientCommand['type']
   hint: string
   request: InputRequest
-  onResolve?: ServerEvent[]
+  /** Instant gates: a flat list of events. `paced` gates: relative-delay beats
+   *  (author with `beats(tl => …)`) that the director plays out over time. */
+  onResolve?: ServerEvent[] | TimelineItem[]
   /** Resolver that depends on the operator's input (the corrected word / chosen
-   *  slot) — lets the correction propagate into later steps. */
-  onResolveWithInput?: (input: string) => ServerEvent[]
+   *  slot) — lets the correction propagate into later steps. Also receives the
+   *  full command, so a slot offer can vary by strategy (one / both / ask). */
+  onResolveWithInput?: (input: string, cmd: ClientCommand) => ServerEvent[]
   /** A second command that also resolves this gate, with a distinct outcome
    *  (e.g. "waive deposit" vs "retry charge" — same checkpoint, different result). */
   awaitAlt?: ClientCommand['type']
-  onResolveAlt?: ServerEvent[]
+  onResolveAlt?: ServerEvent[] | TimelineItem[]
+  /** A third command that also resolves the gate — the "slower / safer" decision
+   *  card (e.g. "read it back", "ask the caller", "send a booking link"). */
+  awaitThird?: ClientCommand['type']
+  onResolveThird?: ServerEvent[] | TimelineItem[]
+  /** Play the resolved branch out one beat at a time (for self-contained branches
+   *  with no authored tail), instead of emitting it all at once. */
+  paced?: boolean
 }
 
 export interface TimelineItem {
@@ -78,6 +88,16 @@ export class Timeline {
   say(delay: number, id: string, speaker: 'caller' | 'ai', words: TranscriptWord[], time?: string): this {
     return this.at(delay, { type: 'transcript.line', line: { id, speaker, words, time, final: true } })
   }
+}
+
+/** Author a gate branch as beats with delays *relative to when the operator
+ *  chooses* — same authoring API as the main call. On a `paced` gate the director
+ *  offsets these by the current time and emits them via the normal timeline, so
+ *  the branch plays out one beat at a time just like the rest of the call. */
+export function beats(build: (tl: Timeline) => void): TimelineItem[] {
+  const tl = new Timeline()
+  build(tl)
+  return tl.items
 }
 
 // ---- shared data ----
@@ -205,6 +225,19 @@ function addIntro(tl: Timeline, opts: { availability?: 'ok' | 'none' | 'glitch' 
             },
           },
         ],
+        // "Ask Jordan": the AI reconfirms aloud instead of the operator deciding.
+        // The caller answers, and the intent is settled from that.
+        awaitThird: 'askCaller',
+        onResolveThird: [
+          { type: 'step.updated', turnId: 't2', stepId: 't2:clarify', state: 'success', detail: 'Re-asked the caller' },
+          { type: 'transcript.line', line: { id: 'l2b', speaker: 'ai', final: true, time: '0:09', words: hi('Just to be sure — a fade, not a facial?') } },
+          { type: 'transcript.line', line: { id: 'l2c', speaker: 'caller', final: true, time: '0:11', words: hi('A fade, yeah.') } },
+          {
+            type: 'step.started',
+            turnId: 't2',
+            step: { id: 't2:classify_intent', type: 'classify_intent', state: 'success', detail: 'Haircut + Beard trim · tomorrow evening · good with fades' },
+          },
+        ],
       },
     )
     tCap = 3400
@@ -285,16 +318,26 @@ function selectAndClose(
       request: { kind: 'selectSlot', title: opts.title },
       // The operator has *approved which slot(s) to offer* — an internal decision.
       // The agent now PRESENTS it to the caller and asks if it works; the caller's
-      // agreement (the next turn) is what actually books it.
-      onResolveWithInput: (slotId) => {
+      // agreement (the next turn) is what actually books it. The offer strategy
+      // (one / both / ask) shapes exactly what the AI says out loud.
+      onResolveWithInput: (slotId, cmd) => {
         const slot = slots.find((s) => s.id === slotId) ?? slots.find((s) => s.recommended) ?? slots[0]
         const name = slot.stylist.split(' ')[0]
         const alt = slots.find((s) => !s.unavailable && s.id !== slot.id)
-        const offer = alt
-          ? `I've got ${speakTime(slot.time)} with ${name}, or ${speakTime(alt.time)} with ${alt.stylist.split(' ')[0]} if you'd prefer — would either of those work for you?`
-          : `I've got ${speakTime(slot.time)} with ${name} — would that work for you?`
+        const mode = cmd.type === 'selectSlot' ? cmd.offer ?? 'both' : 'both'
+        let offer: string
+        if (mode === 'one') {
+          offer = `I've got ${speakTime(slot.time)} with ${name} — would that work for you?`
+        } else if (mode === 'ask') {
+          offer = `How late can you go tonight? I can do ${speakTime(slot.time)} with ${name}, or hold it a little later if you'd rather.`
+        } else {
+          offer = alt
+            ? `I've got ${speakTime(slot.time)} with ${name}, or ${speakTime(alt.time)} with ${alt.stylist.split(' ')[0]} if you'd prefer — would either of those work for you?`
+            : `I've got ${speakTime(slot.time)} with ${name} — would that work for you?`
+        }
+        const detail = mode === 'ask' ? `Asked about timing · leaning ${slot.time}` : `Offering ${slot.time} with ${name}`
         return [
-          { type: 'step.updated', turnId: 't2', stepId, state: 'success', detail: `Offering ${slot.time} with ${name}` },
+          { type: 'step.updated', turnId: 't2', stepId, state: 'success', detail },
           { type: 'turn.status', turnId: 't2', status: 'success', summary: `Offering · ${slot.time} with ${name}` },
           {
             type: 'transcript.line',
@@ -344,15 +387,25 @@ function addBookingTurn(
       hint: 'Review and confirm the booking to finalise.',
       request: { kind: 'confirmBooking', title: 'Confirm this booking', deposit: booking.deposit },
       onResolve: [{ type: 'step.updated', turnId, stepId: `${turnId}:confirm`, state: 'success', detail: 'Appointment booked' }],
+      // "Book, skip deposit": save the same booking, waive the charge.
+      awaitAlt: 'waiveDeposit',
+      onResolveAlt: [{ type: 'step.updated', turnId, stepId: `${turnId}:confirm`, state: 'success', detail: 'Booked — deposit waived by operator' }],
+      // "Read it back first": the AI repeats the booking, the caller says yes, then it saves.
+      awaitThird: 'readBack',
+      onResolveThird: [
+        { type: 'transcript.line', line: { id: `l-${turnId}-rb`, speaker: 'ai', final: true, time: '0:44', words: hi(`So that's ${booking.services.join(' and ')} with ${booking.stylist} at ${booking.time} — shall I lock it in?`) } },
+        { type: 'transcript.line', line: { id: `l-${turnId}-yes`, speaker: 'caller', final: true, time: '0:45', words: hi('Yes, perfect.') } },
+        { type: 'step.updated', turnId, stepId: `${turnId}:confirm`, state: 'success', detail: 'Read back, then booked' },
+      ],
     },
   )
   t += 400
   tl.step(t, turnId, 'notify', 'success', { detail: 'Confirmation SMS sent' })
   tl.at(t + 150, { type: 'booking.confirmed' })
   tl.at(t + 300, { type: 'turn.status', turnId, status: 'success', summary: `Booked · ${bookedWith}` })
-  const closer = booking.deposit
-    ? `You're all set — I've taken the ${booking.deposit} deposit and booked you with ${booking.stylist} at ${booking.time}. A confirmation text is on its way!`
-    : `You're all set — booked with ${booking.stylist} at ${booking.time}. A confirmation text is on its way!`
+  // Deposit-agnostic closer — correct whether the deposit was charged, waived,
+  // or the booking was read back first.
+  const closer = `You're all set — booked with ${booking.stylist} at ${booking.time}. A confirmation text is on its way!`
   tl.say(t + 450, `l-${turnId}-ai`, 'ai', hi(closer), '0:46')
   // Agent wraps up and closes the call after its goodbye.
   tl.at(t + 1600, { type: 'call.state', connected: false, ended: true })
@@ -452,6 +505,13 @@ export const scenarios: Scenario[] = [
           onResolve: [{ type: 'step.updated', turnId: 't4', stepId: 't4:payment', state: 'success', statusLabel: 'Charged', detail: 'Retried — charged successfully' }],
           awaitAlt: 'waiveDeposit',
           onResolveAlt: [{ type: 'step.updated', turnId: 't4', stepId: 't4:payment', state: 'warning', statusLabel: 'Waived', detail: 'Deposit waived by operator' }],
+          // "Ask for another card": the AI tells the caller the card was declined
+          // and takes a new one, then proceeds to confirm.
+          awaitThird: 'askForCard',
+          onResolveThird: [
+            { type: 'transcript.line', line: { id: 'l-t4-card', speaker: 'ai', final: true, time: '0:44', words: hi('That card was declined — could you read me another one when you have a sec?') } },
+            { type: 'step.updated', turnId: 't4', stepId: 't4:payment', state: 'warning', statusLabel: 'New card', detail: 'Asked the caller for another card' },
+          ],
         },
       )
       tl.at(s + 1500, { type: 'payment.result', ok: false })
@@ -463,31 +523,84 @@ export const scenarios: Scenario[] = [
           hint: 'Payment recovered — review and confirm the booking.',
           request: { kind: 'confirmBooking', title: 'Confirm this booking', deposit: '$15' },
           onResolve: [{ type: 'step.updated', turnId: 't4', stepId: 't4:confirm', state: 'success', detail: 'Appointment booked' }],
+          awaitAlt: 'waiveDeposit',
+          onResolveAlt: [{ type: 'step.updated', turnId: 't4', stepId: 't4:confirm', state: 'success', detail: 'Booked — deposit waived by operator' }],
+          awaitThird: 'readBack',
+          onResolveThird: [
+            { type: 'transcript.line', line: { id: 'l-t4-rb', speaker: 'ai', final: true, time: '0:45', words: hi("So that's a haircut and beard trim with Marco at 6:30 — shall I lock it in?") } },
+            { type: 'transcript.line', line: { id: 'l-t4-yes', speaker: 'caller', final: true, time: '0:46', words: hi('Yes, perfect.') } },
+            { type: 'step.updated', turnId: 't4', stepId: 't4:confirm', state: 'success', detail: 'Read back, then booked' },
+          ],
         },
       )
       tl.step(s + 2100, 't4', 'notify', 'success', { detail: 'Confirmation SMS sent' })
       tl.at(s + 2250, { type: 'booking.confirmed' })
-      tl.at(s + 2400, { type: 'turn.status', turnId: 't4', status: 'success', summary: 'Booked after payment retry' })
-      tl.say(s + 2550, 'l-t4-ai', 'ai', hi("You're all set — I've taken the $15 deposit and booked you with Marco at 6:30. Confirmation text on its way!"), '0:47')
+      tl.at(s + 2400, { type: 'turn.status', turnId: 't4', status: 'success', summary: 'Booked · 6:30 PM with Marco' })
+      tl.say(s + 2550, 'l-t4-ai', 'ai', hi("You're all set — booked with Marco at 6:30. A confirmation text is on its way!"), '0:47')
       tl.at(s + 3700, { type: 'call.state', connected: false, ended: true })
     },
   },
   {
     id: 'caller-dropped',
     label: 'Caller dropped',
-    description: 'Caller hangs up before confirming → hold booking → SMS + callback',
+    description: 'Caller hangs up before confirming → operator chooses: call back / hold + text / release',
     build: (tl) => {
       const t = addIntro(tl)
       recommendStep(tl, t, 't2:recommend', BASE_SLOTS)
       selectAndClose(tl, t + 500, 't2:recommend', BASE_SLOTS, SELECT)
       const s = t + 1300
       tl.say(s, 'l-t4', 'caller', hi('Let me just check my calendar and—', 0.9), '0:20')
+      // The line drops → the compact "dropped by the caller" notice appends.
       tl.at(s + 500, { type: 'call.state', connected: false })
-      tl.at(s + 700, { type: 'turn.started', turnId: 't5', speaker: 'system', trigger: 'Caller dropped before confirming', time: '0:22' })
-      tl.step(s + 900, 't5', 'hold_booking', 'success', { detail: 'Held 6:30 with Marco for 10 min' })
-      tl.step(s + 1400, 't5', 'notify', 'success', { detail: 'SMS sent with a one-tap confirmation link' })
-      tl.step(s + 1900, 't5', 'schedule_callback', 'success', { detail: 'Callback queued for +1 (415) •••-4821' })
-      tl.at(s + 2400, { type: 'turn.status', turnId: 't5', status: 'success', summary: 'Booking held · awaiting customer' })
+      // Immediately: a checkpoint for the operator to choose the recovery. The
+      // rest of the call depends entirely on which option they pick. (The gate's
+      // own event is a no-op call.state — the notice above already marked the drop.)
+      tl.gateAt(
+        s + 700,
+        { type: 'call.state' },
+        {
+          await: 'callBack',
+          hint: 'The caller dropped — choose how to recover.',
+          paced: true, // the recovery plays out one beat at a time
+          request: { kind: 'callerDropped', title: 'Caller dropped mid-booking', service: 'Haircut + Beard trim', stylist: 'Marco Diaz', time: '6:30 PM' },
+          // Call back now → the AI redials and speaks FIRST; only after the caller
+          // says yes does it run the booking steps, then close. Beats are authored
+          // with delays relative to the operator's click.
+          onResolve: beats((b) => {
+            b.at(0, { type: 'call.state', connected: true }) // caller picks up again
+            b.say(1300, 'l-cb-ai', 'ai', hi('Sorry, we lost you there — I still have 6:30 with Marco. Shall I lock it in?'), '0:24')
+            b.say(2800, 'l-cb-caller', 'caller', hi('Yes, lock it in.'), '0:29')
+            b.at(3100, { type: 'turn.started', turnId: 't5', speaker: 'caller', trigger: 'Caller confirmed on the call-back', time: '0:29' })
+            b.step(3300, 't5', 'hold', 'success', { detail: 'Re-held 6:30 with Marco' })
+            b.step(3900, 't5', 'deposit', 'success', { detail: '$15 deposit required' })
+            b.step(4500, 't5', 'payment', 'success', { statusLabel: 'Charged', detail: 'Deposit charged to •••• 4242' })
+            b.step(5100, 't5', 'confirm', 'success', { detail: 'Appointment booked' })
+            b.step(5700, 't5', 'notify', 'success', { detail: 'Confirmation SMS sent' })
+            b.at(6300, { type: 'booking.confirmed' })
+            b.at(6350, { type: 'turn.status', turnId: 't5', status: 'success', summary: 'Booked · 6:30 PM with Marco' })
+            b.say(6600, 'l-cb-close', 'ai', hi("You're all set — booked with Marco at 6:30, and I've taken the $15 deposit. A confirmation text is on its way!"), '0:33')
+            b.at(8000, { type: 'call.state', connected: false, ended: true })
+          }),
+          // Hold it and text → park the booking + one-tap SMS + queue a callback.
+          awaitAlt: 'holdAndText',
+          onResolveAlt: beats((b) => {
+            b.at(0, { type: 'turn.started', turnId: 't5', speaker: 'system', trigger: 'Operator held the booking', time: '0:24' })
+            b.step(300, 't5', 'hold_booking', 'success', { detail: 'Held 6:30 with Marco for 10 min' })
+            b.step(900, 't5', 'notify', 'success', { detail: 'SMS sent with a one-tap confirmation link' })
+            b.step(1500, 't5', 'schedule_callback', 'success', { detail: 'Callback queued for +1 (415) •••-4821' })
+            b.at(2100, { type: 'turn.status', turnId: 't5', status: 'success', summary: 'Booking held · awaiting customer' })
+            b.at(2400, { type: 'call.state', connected: false, ended: true })
+          }),
+          // Release the slot → nothing saved, chair back online.
+          awaitThird: 'releaseSlot',
+          onResolveThird: beats((b) => {
+            b.at(0, { type: 'turn.started', turnId: 't5', speaker: 'system', trigger: 'Operator released the slot', time: '0:24' })
+            b.step(300, 't5', 'hold_booking', 'warning', { id: 't5:release', detail: 'Slot released — chair back online' })
+            b.at(900, { type: 'turn.status', turnId: 't5', status: 'warning', summary: 'Slot released · nothing saved' })
+            b.at(1200, { type: 'call.state', connected: false, ended: true })
+          }),
+        },
+      )
     },
   },
   {
@@ -566,6 +679,7 @@ export const scenarios: Scenario[] = [
         {
           await: 'takeOver',
           hint: 'The agent needs you — the scheduling service is down.',
+          paced: true, // the AI-led recovery paths play out one beat at a time
           request: {
             kind: 'handoff',
             title: 'Scheduling service unavailable',
@@ -573,8 +687,25 @@ export const scenarios: Scenario[] = [
               "I can't reach the scheduling service, so I'm unable to pull live availability or hold a slot. Two automatic retries failed (503). Please take over and book this customer manually.",
             detail: 'Scheduling service · HTTP 503 · 2 retries failed',
           },
-          // No auto-resolve: taking over clears the checkpoint (director) and opens
-          // the manual booking wizard; the operator completes the booking.
+          // Primary (take over) has no auto-resolve: it clears the checkpoint
+          // (director) and opens the manual booking wizard. The two AI-led paths
+          // let the caller off politely instead.
+          awaitAlt: 'scheduleCallback',
+          onResolveAlt: beats((b) => {
+            b.at(0, { type: 'step.updated', turnId: 't2', stepId: 't2:handoff', state: 'success', detail: 'Queued a desk callback' })
+            b.at(300, { type: 'step.started', turnId: 't2', step: { id: 't2:schedule_callback', type: 'schedule_callback', state: 'success', detail: 'Callback queued for +1 (415) •••-4821' } })
+            b.say(800, 'l-ho-cb', 'ai', hi("I'm having trouble with the calendar right now — let me have someone from the desk call you straight back to lock this in."), '0:20')
+            b.at(2100, { type: 'turn.status', turnId: 't2', status: 'success', summary: 'Callback queued · awaiting desk' })
+            b.at(2400, { type: 'call.state', connected: false, ended: true })
+          }),
+          awaitThird: 'sendBookingLink',
+          onResolveThird: beats((b) => {
+            b.at(0, { type: 'step.updated', turnId: 't2', stepId: 't2:handoff', state: 'success', detail: 'Texted the self-serve booking link' })
+            b.at(300, { type: 'step.started', turnId: 't2', step: { id: 't2:notify', type: 'notify', state: 'success', detail: 'Booking link sent to +1 (415) •••-4821' } })
+            b.say(800, 'l-ho-link', 'ai', hi("I've just texted you a link to finish booking online — it keeps everything we discussed. Thanks for calling!"), '0:20')
+            b.at(2100, { type: 'turn.status', turnId: 't2', status: 'success', summary: 'Booking link sent · self-serve' })
+            b.at(2400, { type: 'call.state', connected: false, ended: true })
+          }),
         },
       )
     },

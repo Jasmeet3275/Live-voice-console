@@ -10,13 +10,14 @@ describe('ConsolePage (smoke)', () => {
     )
 
     expect(screen.getByText('Zoca Front Desk')).toBeInTheDocument()
-    expect(screen.getByText('Press Start to begin the call')).toBeInTheDocument()
+    expect(screen.getByText('Waiting for the call')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Start call/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Start demo' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Keyboard shortcuts' })).toBeInTheDocument()
 
     // Dock controls are inert until the call starts.
     expect(screen.getByRole('button', { name: 'Take over' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Mute' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Mute/ })).toBeDisabled()
 
     // Conversation landmark + skip link are present.
     expect(screen.getByRole('main', { name: 'Call conversation' })).toBeInTheDocument()

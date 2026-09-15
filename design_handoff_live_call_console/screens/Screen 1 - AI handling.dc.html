@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300..800;1,400&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#ece7df;font-family:"Public Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1f7d6e}a:hover{color:#175c51}
+@keyframes rec{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes riseIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes flash{0%{background:oklch(0.95 0.045 170)}100%{background:transparent}}
+@keyframes strike{from{width:0}to{width:100%}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
+</style></helmet>
+
+<div style="padding:34px 38px 30px">
+<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+<span style="font:700 10px 'Public Sans',sans-serif;letter-spacing:.14em;color:#6b645b;text-transform:uppercase">Screen 1 of 3</span>
+<span style="font:650 15px 'Public Sans',sans-serif;color:#221f1c">Zoca Front Desk — AI handling the call</span>
+</div>
+<div style="font:400 13px/1.6 'Public Sans',sans-serif;color:#57514a;max-width:720px;margin-bottom:22px">The AI is running the call unassisted. Two ambiguities have already been resolved without asking — “tomorrow” and “evening” — and logged in the collapsed row. The booking record is empty by design: every field reads <b style="color:#221f1c">——</b> until the AI is certain of it, so the operator never sees a guess dressed as a fact.</div>
+
+<div style="display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap">
+<div style="width:1320px;flex:none;background:#f4efe8;border:1px solid rgba(34,31,28,.1);border-radius:20px;box-shadow:0 2px 6px rgba(34,31,28,.06),0 20px 50px -26px rgba(34,31,28,.34);overflow:hidden;display:flex;flex-direction:column;font-variant-numeric:tabular-nums">
+
+<div style="display:flex;align-items:center;gap:14px;padding:0 20px;height:56px;background:#fffdfa;border-bottom:1px solid rgba(34,31,28,.09);flex:none">
+<div style="display:flex;align-items:center;gap:9px"><div style="width:22px;height:22px;border-radius:8px;background:#1f7d6e"></div><span style="font:700 14.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.015em">Zoca Front Desk</span><span style="font:400 13px 'Public Sans',sans-serif;color:#6f6860">Luxe Salon</span></div>
+
+<div style="display:flex;align-items:center;gap:7px;padding:5px 11px 5px 9px;border:1px solid rgba(34,31,28,.12);border-radius:20px">
+<div style="width:7px;height:7px;border-radius:50%;background:#c0392b;animation:rec 1.8s ease-in-out infinite"></div>
+<span style="font:600 11.5px 'Public Sans',sans-serif;letter-spacing:.02em;color:#57514a">Recording</span>
+<span style="width:1px;height:11px;background:rgba(34,31,28,.14)"></span>
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">caller notified</span>
+</div>
+
+<sc-if value="{{ held }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:8px;padding:5px 12px;background:oklch(0.965 0.04 82);border:1px solid rgba(176,117,20,.32);border-radius:20px;animation:riseIn .3s ease">
+<div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;animation:breathe 1.4s ease-in-out infinite"></div>
+<span style="font:600 12.5px 'Public Sans',sans-serif;color:#6b4a0d">AI stalled — waiting on you</span>
+<span style="font:700 12px 'Public Sans',sans-serif;color:#6b4a0d">{{ deadAir }}</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ takenOver }}">
+<div style="display:flex;align-items:center;gap:8px;padding:5px 12px;background:#221f1c;border-radius:20px;animation:riseIn .3s ease">
+<div style="width:7px;height:7px;border-radius:50%;background:#fff"></div>
+<span style="font:600 12.5px 'Public Sans',sans-serif;color:#fff">You have the line — AI muted</span>
+</div>
+</sc-if>
+
+<div style="margin-left:auto;display:flex;align-items:center;gap:13px">
+<div style="text-align:right"><div style="font:400 10px 'Public Sans',sans-serif;letter-spacing:.11em;color:#6f6860;text-transform:uppercase">Elapsed</div><div style="font:700 13.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.02em">{{ clock }}</div></div>
+<div style="width:1px;height:26px;background:rgba(34,31,28,.1)"></div>
+<div style="display:flex;align-items:center;gap:7px"><div style="width:28px;height:28px;border-radius:50%;background:#e4ddd2;font:600 11px 'Public Sans',sans-serif;color:#6d665e;display:flex;align-items:center;justify-content:center">JS</div><span style="font:500 12.5px 'Public Sans',sans-serif;color:#57514a">Jasmeet</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex:1;min-height:0">
+
+<div style="width:264px;flex:none;background:#fffdfa;border-right:1px solid rgba(34,31,28,.09);padding:18px;display:flex;flex-direction:column;gap:16px">
+<div>
+<div style="display:flex;align-items:center;gap:11px;margin-bottom:11px">
+<div style="width:42px;height:42px;border-radius:14px;background:#e4ddd2;color:#57514a;font:600 15px 'Public Sans',sans-serif;display:flex;align-items:center;justify-content:center;letter-spacing:-.02em">JR</div>
+<div>
+<div style="font:650 16px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.02em;line-height:1.2">Jordan Rivera</div>
+<div style="font:400 12px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">+1 (415) ··· 4821</div>
+</div>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<span style="padding:4px 9px;background:#f1ede6;color:#57514a;border-radius:8px;font:600 11px 'Public Sans',sans-serif">4 visits</span>
+<span style="padding:4px 9px;background:#f1ede6;color:#57514a;border-radius:8px;font:600 11px 'Public Sans',sans-serif">0 no-shows</span>
+</div>
+</div>
+
+<div style="padding:11px 12px;background:#f4efe8;border-radius:12px">
+<div style="font:700 9.5px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6b645b;text-transform:uppercase;margin-bottom:6px">Team note</div>
+<div style="font:400 12.5px/1.5 'Public Sans',sans-serif;color:#3a352f">Prefers not to be upsold. Runs a few minutes late — Marco holds the chair.</div>
+</div>
+
+<div>
+<div style="font:700 9.5px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6f6860;text-transform:uppercase;margin-bottom:9px">Visits</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Skin fade + beard</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Aug 22 · Marco · $48</div></div></div>
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Skin fade</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Jul 30 · Marco · $34</div></div></div>
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Skin fade</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Jun 14 · Marco · $34</div></div></div>
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Haircut</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Jul 2 · Alex · $30</div></div></div>
+</div>
+<div style="margin-top:10px;padding:9px 11px;background:#f4efe8;border-radius:10px;font:400 11.5px/1.45 'Public Sans',sans-serif;color:#57514a">Never booked a facial. <b style="color:#221f1c">4 of 4</b> were fades.</div>
+</div>
+
+<div style="margin-top:auto;padding:10px 12px;background:#f4efe8;border-radius:12px">
+<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px"><div style="width:11px;height:11px;border-radius:3px;border:1.5px solid #8d867d"></div><span style="font:600 11.5px 'Public Sans',sans-serif;color:#57514a">Visa ···· 4242</span></div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6b645b">Charging needs your confirmation.</div>
+</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;background:#f4efe8">
+
+<div style="display:flex;align-items:center;gap:12px;padding:10px 22px;border-bottom:1px solid rgba(34,31,28,.08);flex:none">
+<span style="font:700 9.5px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6b645b;text-transform:uppercase">Transcript</span>
+<sc-if value="{{ held }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#d9a53c"></div><span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b4a0d">1 word needs review</span></span></sc-if>
+<sc-if value="{{ resolved }}"><span style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#1f7d6e"></div><span style="font:400 11.5px 'Public Sans',sans-serif;color:#1a6357">corrected by you</span></span></sc-if>
+<span style="margin-left:auto;font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">Avg confidence <b style="color:#221f1c">91%</b></span>
+</div>
+
+<div style="flex:1;overflow:hidden;padding:18px 22px;display:flex;flex-direction:column;gap:13px">
+
+<sc-if value="{{ showGreet }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:11px;animation:riseIn .35s ease">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Zoca AI</span><span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860">0:00</span></div>
+<div style="padding:10px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13.5px/1.55 'Public Sans',sans-serif;color:#3a352f">Thanks for calling Luxe Salon — how can I help you today?</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showCaller }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:11px;flex-direction:row-reverse;animation:riseIn .35s ease">
+<div style="width:26px;height:26px;border-radius:9px;background:#e4ddd2;flex:none"></div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-end">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860">0:06</span><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Jordan</span></div>
+<div style="max-width:86%;padding:10px 13px;background:#e9e3d9;border-radius:13px 4px 13px 13px;font:400 13.5px/1.6 'Public Sans',sans-serif;color:#3a352f">Hi, I need a haircut and a beard trim tomorrow evening. I prefer someone good with <sc-if value="{{ choseFade }}"><span style="color:#6b645b;text-decoration:line-through">facials</span> <span style="color:#1a6357;font-weight:650;background:oklch(0.95 0.04 170);padding:0 4px;border-radius:4px;animation:flash 1.2s ease">fades</span></sc-if><sc-if value="{{ choseFacial }}"><span style="font-weight:650;color:#3a352f">facials</span></sc-if><sc-if value="{{ choseAsk }}"><span style="color:#6b645b;text-decoration:line-through">facials</span> <span style="color:#6b4a0d;font-weight:600">asked again</span></sc-if><sc-if value="{{ listening }}" hint-placeholder-val="{{ true }}"><span>facials</span></sc-if><sc-if value="{{ held }}"><span style="background:oklch(0.93 0.06 82);border-bottom:2px solid #d9a53c;padding:0 3px;border-radius:3px;font-weight:600;color:#6b4a0d">facials</span></sc-if></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showCaller }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:10px;margin-left:37px;padding:8px 12px;background:#f1ede6;border-radius:10px">
+<div style="width:7px;height:7px;border-radius:50%;background:#cfc5b6;flex:none"></div>
+<span style="font:600 11.5px 'Public Sans',sans-serif;color:#57514a">AI resolved 2 on its own</span>
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">“tomorrow” → Tue 15 Sep · “evening” → after 5 PM</span>
+<span style="margin-left:auto;font:400 11px 'Public Sans',sans-serif;color:#6f6860">show</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ held }}" hint-placeholder-val="{{ true }}">
+<div style="margin-left:37px;background:#fffdfa;border:1.5px solid rgba(176,117,20,.55);border-radius:15px;overflow:hidden;box-shadow:0 10px 26px -14px rgba(176,117,20,.5);animation:riseIn .4s ease">
+
+<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:oklch(0.965 0.04 82);border-bottom:1px solid rgba(176,117,20,.25)">
+<div style="width:8px;height:8px;border-radius:50%;background:#d9a53c"></div>
+<span style="font:700 10px 'Public Sans',sans-serif;letter-spacing:.11em;color:#6b4a0d;text-transform:uppercase">Held — you decide</span>
+<span style="font:400 12.5px 'Public Sans',sans-serif;color:#6b4a0d">Understanding · service</span>
+<span style="margin-left:auto;font:400 11.5px 'Public Sans',sans-serif;color:#6b4a0d">dead air {{ deadAir }}</span>
+</div>
+
+<div style="padding:14px 16px">
+<div style="font:400 14px/1.5 'Public Sans',sans-serif;color:#221f1c;margin-bottom:3px">One word decides the booking, and it came through at <b style="color:#6b4a0d">38%</b>.</div>
+<div style="font:400 12.5px/1.5 'Public Sans',sans-serif;color:#57514a;margin-bottom:12px">No capability check, no duration, no slots — the AI is holding the line with “Let me check that for you.”</div>
+
+<div style="display:flex;align-items:center;gap:11px;padding:8px 11px;background:#f4efe8;border-radius:11px;margin-bottom:12px">
+<div style="width:26px;height:26px;border-radius:50%;background:#221f1c;flex:none;display:flex;align-items:center;justify-content:center"><div style="width:0;height:0;border-left:7px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px"></div></div>
+<div style="flex:1;height:20px">{{ clip }}</div>
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;flex:none">0:11 · 2.0s</span>
+</div>
+
+<div style="display:flex;gap:9px;align-items:stretch;margin-bottom:12px">
+<div onClick="{{ accept }}" style="flex:1;padding:11px 13px;background:oklch(0.972 0.022 170);border:1.5px solid #1f7d6e;border-radius:12px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease" style-hover="transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(31,125,110,.6)">
+<div style="display:flex;align-items:baseline;gap:7px;margin-bottom:5px"><span style="font:650 14.5px 'Public Sans',sans-serif;color:#164f45">“fades”</span><span style="padding:2px 6px;background:#1f7d6e;color:#fff;border-radius:5px;font:700 9px 'Public Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase">AI’s pick</span></div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#1a6357">All 4 past visits. Pairs with beard trim. 45 min, Marco certified.</div>
+<div style="margin-top:8px;font:600 11px 'Public Sans',sans-serif;color:#1f7d6e">Accept · Enter</div>
+</div>
+<div onClick="{{ useFacial }}" style="flex:1;padding:11px 13px;background:#f4efe8;border:1px solid rgba(34,31,28,.13);border-radius:12px;cursor:pointer;transition:transform .12s ease" style-hover="transform:translateY(-2px);border-color:rgba(34,31,28,.3)">
+<div style="display:flex;align-items:baseline;gap:7px;margin-bottom:5px"><span style="font:650 14.5px 'Public Sans',sans-serif;color:#221f1c">“facials”</span><span style="font:400 10.5px 'Public Sans',sans-serif;color:#6b645b">as heard</span></div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6d665e">Never booked. Not offered with beard trim. 60 min, Nina.</div>
+<div style="margin-top:8px;font:600 11px 'Public Sans',sans-serif;color:#57514a">Use this · 2</div>
+</div>
+<div onClick="{{ askBack }}" style="flex:1;padding:11px 13px;background:#f4efe8;border:1px dashed rgba(34,31,28,.22);border-radius:12px;cursor:pointer;transition:transform .12s ease" style-hover="transform:translateY(-2px);border-color:rgba(34,31,28,.4)">
+<div style="font:650 14.5px 'Public Sans',sans-serif;color:#221f1c;margin-bottom:5px">Ask Jordan</div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6d665e">AI reconfirms aloud. Costs ~8s and admits the mishear.</div>
+<div style="margin-top:8px;font:600 11px 'Public Sans',sans-serif;color:#57514a">Ask · 3</div>
+</div>
+</div>
+
+<div style="padding:10px 13px;background:#f4efe8;border-radius:11px">
+<div style="font:700 9px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6b645b;text-transform:uppercase;margin-bottom:5px">Jordan then hears</div>
+<div style="font:400 13px/1.5 'Public Sans',sans-serif;color:#3a352f;font-style:italic">“A fade and a beard trim with Marco — let me find you an evening slot.”</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showAiAck }}">
+<div style="display:flex;gap:11px;animation:riseIn .35s ease">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Zoca AI</span><span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860">{{ stampAck }}</span><span style="padding:2px 7px;background:oklch(0.95 0.04 170);border-radius:6px;font:600 10px 'Public Sans',sans-serif;color:#1a6357">your correction</span></div>
+<div style="padding:10px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13.5px/1.55 'Public Sans',sans-serif;color:#3a352f">A fade and a beard trim with Marco — let me find you an evening slot.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showAiSlots }}">
+<div style="display:flex;gap:11px;animation:riseIn .35s ease">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Zoca AI</span><span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860">{{ stampOffer }}</span></div>
+<div style="padding:10px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13.5px/1.55 'Public Sans',sans-serif;color:#3a352f">I have 6:30 tomorrow with Marco, or 8:00 if later suits you better.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showCallerAccept }}">
+<div style="display:flex;gap:11px;flex-direction:row-reverse;animation:riseIn .35s ease">
+<div style="width:26px;height:26px;border-radius:9px;background:#e4ddd2;flex:none"></div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-end">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860">{{ stampAccept }}</span><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Jordan</span></div>
+<div style="max-width:86%;padding:10px 13px;background:#e9e3d9;border-radius:13px 4px 13px 13px;font:400 13.5px/1.6 'Public Sans',sans-serif;color:#3a352f">The 6:30 with Marco works great.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ confirmed }}">
+<div style="display:flex;gap:11px;animation:riseIn .35s ease">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Zoca AI</span><span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860">{{ stampConfirm }}</span></div>
+<div style="padding:10px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13.5px/1.55 'Public Sans',sans-serif;color:#3a352f">You’re booked with Marco at {{ chosen }} tomorrow. I’ve taken the {{ recDeposit }} deposit and a text is on its way.</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ listening }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:11px;align-items:center;margin-top:auto">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="display:flex;align-items:center;gap:9px;padding:9px 13px;background:#fffdfa;border:1px dashed rgba(34,31,28,.16);border-radius:4px 13px 13px 13px">
+<div style="display:flex;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .4s infinite"></div></div>
+<span style="font:400 12.5px 'Public Sans',sans-serif;color:#6b645b">checking services, staff and the calendar</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showStall }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:11px;align-items:center;margin-top:auto">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="display:flex;align-items:center;gap:9px;padding:9px 13px;background:#fffdfa;border:1px dashed rgba(34,31,28,.16);border-radius:4px 13px 13px 13px">
+<div style="display:flex;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .4s infinite"></div></div>
+<span style="font:400 12.5px 'Public Sans',sans-serif;color:#6b645b">stalling the caller · next stall line in 6s</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ takenOver }}">
+<div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fffdfa;border:1.5px solid #221f1c;border-radius:13px;animation:riseIn .3s ease">
+<span style="font:400 13.5px 'Public Sans',sans-serif;color:#6f6860;flex:1">Speak to Jordan — the AI is listening but silent</span>
+<span style="padding:7px 13px;background:#221f1c;border-radius:9px;font:600 12.5px 'Public Sans',sans-serif;color:#fff">Hand back to AI</span>
+</div>
+</sc-if>
+</div>
+</div>
+<div style="width:330px;flex:none;background:#fffdfa;border-left:1px solid rgba(34,31,28,.09);display:flex;flex-direction:column">
+
+<div style="padding:15px 18px 13px;border-bottom:1px solid rgba(34,31,28,.08)">
+<div style="display:flex;align-items:baseline;gap:8px">
+<span style="font:650 14.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.01em">Booking record</span>
+<span style="margin-left:auto;font:400 11px 'Public Sans',sans-serif;color:#6f6860"><sc-if value="{{ confirmed }}">saved</sc-if><sc-if value="{{ notConfirmed }}" hint-placeholder-val="{{ true }}">draft</sc-if></span>
+</div>
+</div>
+
+<div style="flex:1;overflow:hidden;padding:15px 18px;display:flex;flex-direction:column">
+
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;width:62px;flex:none">Customer</span>
+<span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">Jordan Rivera</span>
+</div>
+
+<sc-if value="{{ resolved }}">
+<div style="display:flex;flex-direction:column;animation:fadeIn .5s ease">
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;width:62px;flex:none">Service</span>
+<span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">{{ recService }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;width:62px;flex:none">Stylist</span>
+<span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">{{ recStylist }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;width:62px;flex:none">Length</span>
+<span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">{{ recDuration }}</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;opacity:.6">
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 11.5px 'Public Sans',sans-serif;color:#6f6860;width:62px;flex:none">Service</span><span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 11.5px 'Public Sans',sans-serif;color:#6f6860;width:62px;flex:none">Stylist</span><span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 11.5px 'Public Sans',sans-serif;color:#6f6860;width:62px;flex:none">Length</span><span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+</div>
+</sc-if>
+
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;width:62px;flex:none">Time</span>
+<sc-if value="{{ hasTime }}"><span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">{{ recTime }}</span></sc-if>
+<sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}"><span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span></sc-if>
+</div>
+
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0">
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;width:62px;flex:none">Price</span>
+<sc-if value="{{ resolved }}"><span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">{{ recPrice }} <span style="font-weight:400;color:#6b645b">· {{ recDeposit }} deposit</span></span></sc-if>
+<sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}"><span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span></sc-if>
+</div>
+</div>
+
+<sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:12px;padding:11px 13px;background:#f1ede6;border-radius:12px;font:400 12px/1.5 'Public Sans',sans-serif;color:#57514a">Withheld, not unknown. A field fills only when the AI is certain of it. <sc-if value="{{ held }}" hint-placeholder-val="{{ true }}">Resolve the word in the transcript and all five fill at once.</sc-if><sc-if value="{{ listening }}">Nothing has been heard yet.</sc-if></div>
+</sc-if>
+
+<sc-if value="{{ offered }}">
+<div style="margin-top:16px;animation:fadeIn .5s ease">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:9px">
+<span style="font:700 9.5px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6f6860;text-transform:uppercase">Slots</span>
+<span style="margin-left:auto;font:400 10.5px 'Public Sans',sans-serif;color:#6f6860">read 4s ago</span>
+</div>
+
+<div onClick="{{ pick630 }}" style="padding:11px 13px;background:oklch(0.972 0.022 170);border:1.5px solid #1f7d6e;border-radius:13px;cursor:pointer;margin-bottom:8px">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
+<span style="font:700 18px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.025em">6:30 PM</span>
+<span style="font:600 12.5px 'Public Sans',sans-serif;color:#57514a">Marco</span>
+<span style="margin-left:auto;padding:3px 8px;background:#1f7d6e;color:#fff;border-radius:7px;font:700 9px 'Public Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase">Best fit</span>
+</div>
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:#1a6357;margin-bottom:7px">{{ recDuration }} · ends 7:15 · {{ recPrice }}</div>
+<div style="padding-top:7px;border-top:1px solid rgba(31,125,110,.2);font:400 11.5px/1.5 'Public Sans',sans-serif;color:#1a6357">Only evening stylist certified on fades, booked 3 of Jordan’s 4 visits, and the 45 min runs back-to-back without splitting chairs.</div>
+</div>
+
+<sc-if value="{{ slotLost }}">
+<div style="padding:10px 13px;background:#f4efe8;border:1px solid rgba(34,31,28,.1);border-radius:13px;margin-bottom:8px;opacity:.6;animation:fadeIn .4s ease">
+<div style="display:flex;align-items:baseline;gap:8px">
+<span style="font:700 15px 'Public Sans',sans-serif;color:#6b645b;letter-spacing:-.02em;text-decoration:line-through">7:15 PM</span>
+<span style="font:600 12px 'Public Sans',sans-serif;color:#6b645b">Alex</span>
+<span style="margin-left:auto;font:600 11px 'Public Sans',sans-serif;color:#57514a">just taken</span>
+</div>
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Booked online while you were deciding. Not offered to Jordan.</div>
+</div>
+</sc-if>
+
+<div onClick="{{ pick800 }}" style="padding:10px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.13);border-radius:13px;cursor:pointer">
+<div style="display:flex;align-items:baseline;gap:8px">
+<span style="font:700 16px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.02em">8:00 PM</span>
+<span style="font:600 12.5px 'Public Sans',sans-serif;color:#57514a">Marco</span>
+<span style="margin-left:auto;font:400 11px 'Public Sans',sans-serif;color:#6f6860">alt</span>
+</div>
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Last of the day · {{ recDuration }} · {{ recPrice }}</div>
+</div>
+</div>
+</sc-if>
+
+<div style="margin-top:auto;padding-top:14px">
+<sc-if value="{{ canConfirm }}">
+<div onClick="{{ confirmBooking }}" style="display:flex;align-items:center;justify-content:center;gap:9px;padding:13px;background:#1f7d6e;border-radius:12px;cursor:pointer;box-shadow:0 6px 16px -9px rgba(31,125,110,.75);transition:transform .12s ease" style-hover="transform:translateY(-2px)">
+<span style="font:650 14.5px 'Public Sans',sans-serif;color:#fff">Confirm · take {{ recDeposit }}</span>
+</div>
+<div style="margin-top:7px;font:400 11px/1.4 'Public Sans',sans-serif;color:#6b645b;text-align:center">Charges Visa ···· 4242 and texts Jordan.</div>
+</sc-if>
+<sc-if value="{{ confirming }}">
+<div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;background:#f1ede6;border-radius:12px">
+<div style="width:14px;height:14px;border-radius:50%;border:2px solid rgba(34,31,28,.18);border-top-color:#1f7d6e;animation:spin .7s linear infinite"></div>
+<span style="font:650 14px 'Public Sans',sans-serif;color:#57514a">Taking deposit…</span>
+</div>
+</sc-if>
+<sc-if value="{{ confirmed }}">
+<div style="padding:13px;background:oklch(0.972 0.022 170);border:1.5px solid #1f7d6e;border-radius:12px;text-align:center;animation:riseIn .35s ease">
+<div style="font:650 14.5px 'Public Sans',sans-serif;color:#164f45;margin-bottom:3px">Booked · {{ recDeposit }} taken</div>
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:#1a6357">Confirmation sent to ··· 4821</div>
+</div>
+</sc-if>
+<sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;justify-content:center;gap:9px;padding:13px;background:#f1ede6;border-radius:12px">
+<span style="font:650 14px 'Public Sans',sans-serif;color:#6f6860">Confirm booking</span>
+<span style="padding:2px 7px;background:rgba(34,31,28,.1);color:#5f594f;border-radius:6px;font:700 9px 'Public Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase">withheld</span>
+</div>
+</sc-if>
+</div>
+</div>
+</div>
+</div>
+<div style="flex:none;background:#fffdfa;border-top:1px solid rgba(34,31,28,.09);padding:12px 20px 14px">
+<div style="display:flex;align-items:center;gap:14px;margin-bottom:11px">
+<div onClick="{{ toggle }}" style="width:32px;height:32px;border-radius:50%;background:#221f1c;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}"><div style="width:0;height:0;border-left:9px solid #fff;border-top:6px solid transparent;border-bottom:6px solid transparent;margin-left:3px"></div></sc-if>
+<sc-if value="{{ playing }}"><div style="display:flex;gap:3px"><div style="width:3px;height:12px;background:#fff"></div><div style="width:3px;height:12px;background:#fff"></div></div></sc-if>
+</div>
+<span style="font:700 12.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.02em;flex:none;width:34px">{{ clock }}</span>
+<div style="flex:1;min-width:0;position:relative;height:38px">
+<div style="position:absolute;left:0;right:0;top:0;bottom:0">{{ wave }}</div>
+<div style="{{ playheadStyle }}"></div>
+<sc-if value="{{ flagInWindow }}" hint-placeholder-val="{{ true }}"><div style="{{ flagStyle }}">38%</div></sc-if>
+</div>
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6f6860;flex:none">{{ windowLabel }}</span>
+</div>
+
+<div style="display:flex;align-items:center;gap:8px">
+<div style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px;cursor:pointer" title="Mute · M"><div style="width:13px;height:13px;border-radius:3px;border:1.5px solid #3a352f"></div></div>
+<div style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px;cursor:pointer" title="Speaker · S"><div style="width:13px;height:13px;border-radius:50%;border:1.5px solid #3a352f"></div></div>
+<div style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px;cursor:pointer" title="Replay last 5s · R"><div style="width:13px;height:13px;border-radius:50%;border:1.5px solid #3a352f;border-top-color:transparent"></div></div>
+<div style="display:flex;align-items:center;justify-content:center;width:38px;height:38px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px;cursor:pointer" title="Stall the caller · H"><div style="display:flex;gap:2.5px"><div style="width:3px;height:13px;background:#3a352f"></div><div style="width:3px;height:13px;background:#3a352f"></div></div></div>
+
+<div style="margin-left:auto;display:flex;align-items:center;gap:9px">
+<div onClick="{{ takeOver }}" style="display:flex;align-items:center;gap:9px;padding:11px 19px;background:#1f7d6e;border-radius:12px;cursor:pointer;box-shadow:0 6px 16px -9px rgba(31,125,110,.75),inset 0 0 0 1px rgba(255,255,255,.12);transition:transform .12s ease" style-hover="transform:translateY(-2px)" title="Mutes the AI. It keeps transcribing and drafting; nothing is sent or charged without you.">
+<div style="width:13px;height:13px;border-radius:4px;background:rgba(255,255,255,.9)"></div>
+<span style="font:650 14px 'Public Sans',sans-serif;color:#fff;letter-spacing:-.01em">Take over</span>
+<span style="padding:2px 6px;background:rgba(0,0,0,.22);border-radius:5px;font:700 10px 'Public Sans',sans-serif;color:#fff">⌘⇧T</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:11px 17px;background:#c0392b;border-radius:12px;cursor:pointer;box-shadow:0 6px 16px -9px rgba(192,57,43,.7)">
+<div style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.92)"></div>
+<span style="font:650 13.5px 'Public Sans',sans-serif;color:#fff">End call</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="flex:none;display:flex;flex-direction:column;gap:9px">
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:rgba(34,31,28,.55)">Mobile · call — AI handling, record still empty</div>
+<div style="width:390px;height:844px;background:#f4efe8;border:1px solid rgba(34,31,28,.12);border-radius:38px;box-shadow:0 2px 6px rgba(34,31,28,.06),0 20px 50px -26px rgba(34,31,28,.34);overflow:hidden;display:flex;flex-direction:column;position:relative;font-variant-numeric:tabular-nums">
+
+<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 26px 6px;font:600 12.5px 'Public Sans',sans-serif;color:#221f1c;flex:none"><span>9:41</span><span style="display:flex;gap:4px;align-items:center"><div style="width:15px;height:8px;border:1.2px solid #221f1c;border-radius:2px"></div></span></div>
+
+<div style="padding:8px 18px 12px;background:#fffdfa;border-bottom:1px solid rgba(34,31,28,.09);flex:none">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+<div style="width:36px;height:36px;border-radius:12px;background:#e4ddd2;color:#57514a;font:600 13px 'Public Sans',sans-serif;display:flex;align-items:center;justify-content:center">JR</div>
+<div style="flex:1;min-width:0">
+<div style="font:650 15px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.02em">Jordan Rivera</div>
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">4 visits · usual: fade + beard</div>
+</div>
+<div style="text-align:right"><div style="font:700 14px 'Public Sans',sans-serif;color:#221f1c">{{ clock }}</div><div style="display:flex;align-items:center;gap:4px;justify-content:flex-end"><div style="width:6px;height:6px;border-radius:50%;background:#c0392b;animation:rec 1.8s ease-in-out infinite"></div><span style="font:400 10.5px 'Public Sans',sans-serif;color:#6b645b">rec</span></div></div>
+</div>
+<div style="position:relative;height:30px">
+<div style="position:absolute;left:0;right:0;top:0;bottom:0">{{ wave }}</div>
+<div style="{{ playheadStyle }}"></div>
+</div>
+</div>
+
+<div style="flex:none;display:flex;gap:4px;padding:8px 16px;background:#fffdfa;border-bottom:1px solid rgba(34,31,28,.09)">
+<div style="flex:1;text-align:center;padding:9px;background:#221f1c;border-radius:10px;font:600 12.5px 'Public Sans',sans-serif;color:#fff">Call</div>
+<div style="flex:1;text-align:center;padding:9px;border-radius:10px;font:600 12.5px 'Public Sans',sans-serif;color:#57514a">Booking</div>
+<div style="flex:1;text-align:center;padding:9px;border-radius:10px;font:600 12.5px 'Public Sans',sans-serif;color:#57514a">Customer</div>
+</div>
+
+<div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<sc-if value="{{ showGreet }}" hint-placeholder-val="{{ true }}">
+<div style="align-self:flex-start;max-width:84%;padding:9px 12px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13px/1.5 'Public Sans',sans-serif;color:#3a352f;animation:riseIn .3s ease">Thanks for calling Luxe Salon — how can I help you today?</div>
+</sc-if>
+<sc-if value="{{ showCaller }}" hint-placeholder-val="{{ true }}">
+<div style="align-self:flex-end;max-width:84%;padding:9px 12px;background:#e9e3d9;border-radius:13px 4px 13px 13px;font:400 13px/1.55 'Public Sans',sans-serif;color:#3a352f;animation:riseIn .3s ease">Hi, I need a haircut and a beard trim tomorrow evening. I prefer someone good with <sc-if value="{{ choseFade }}"><span style="color:#6b645b;text-decoration:line-through">facials</span> <span style="color:#1a6357;font-weight:650">fades</span></sc-if><sc-if value="{{ listening }}" hint-placeholder-val="{{ true }}"><span>facials</span></sc-if><sc-if value="{{ held }}"><span style="background:oklch(0.93 0.06 82);border-bottom:2px solid #d9a53c;padding:0 3px;border-radius:3px;font-weight:600;color:#6b4a0d">facials</span></sc-if></div>
+</sc-if>
+
+<sc-if value="{{ showCaller }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:flex-start;gap:9px;padding:9px 11px;background:#f1ede6;border-radius:11px">
+<div style="width:7px;height:7px;border-radius:50%;background:#cfc5b6;flex:none;margin-top:4px"></div>
+<div style="flex:1;min-width:0">
+<div style="font:600 11.5px 'Public Sans',sans-serif;color:#3a352f">AI resolved 2 on its own</div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">“tomorrow” → Tue 15 Sep · “evening” → after 5 PM</div>
+</div>
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860;flex:none">show</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}">
+<div style="padding:13px 14px;background:#fffdfa;border:1px solid rgba(34,31,28,.1);border-radius:14px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+<span style="font:700 9.5px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6f6860;text-transform:uppercase">Booking record</span>
+<span style="margin-left:auto;font:400 11px 'Public Sans',sans-serif;color:#6f6860">draft</span>
+</div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Customer</span><span style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Jordan Rivera</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Service</span><span style="font:400 12.5px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Stylist</span><span style="font:400 12.5px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Time</span><span style="font:400 12.5px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Price</span><span style="font:400 12.5px 'Public Sans',sans-serif;color:#7d756b">——</span></div>
+<div style="margin-top:10px;padding:9px 11px;background:#f1ede6;border-radius:10px;font:400 11.5px/1.5 'Public Sans',sans-serif;color:#57514a"><sc-if value="{{ held }}" hint-placeholder-val="{{ true }}">Withheld, not unknown. Resolve the word below and all four fill at once.</sc-if><sc-if value="{{ listening }}">A field fills only when the AI is certain of it. Nothing is settled yet.</sc-if></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showStall }}" hint-placeholder-val="{{ true }}">
+<div style="align-self:flex-start;margin-top:auto;display:flex;align-items:center;gap:8px;padding:9px 12px;background:#fffdfa;border:1px dashed rgba(34,31,28,.16);border-radius:4px 13px 13px 13px">
+<div style="display:flex;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .4s infinite"></div></div>
+<span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">stalling the caller · next line in 6s</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ listening }}" hint-placeholder-val="{{ true }}">
+<div style="align-self:flex-start;margin-top:auto;display:flex;align-items:center;gap:8px;padding:9px 12px;background:#fffdfa;border:1px dashed rgba(34,31,28,.16);border-radius:4px 13px 13px 13px">
+<div style="display:flex;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .4s infinite"></div></div>
+<span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">checking services, staff and the calendar</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ showAiAck }}">
+<div style="align-self:flex-start;max-width:84%;padding:9px 12px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13px/1.5 'Public Sans',sans-serif;color:#3a352f;animation:riseIn .3s ease">A fade and a beard trim with Marco — let me find you an evening slot.</div>
+</sc-if>
+<sc-if value="{{ showAiSlots }}">
+<div style="align-self:flex-start;max-width:84%;padding:9px 12px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13px/1.5 'Public Sans',sans-serif;color:#3a352f;animation:riseIn .3s ease">I have 6:30 tomorrow with Marco, or 8:00 if later suits you better.</div>
+</sc-if>
+<sc-if value="{{ showCallerAccept }}">
+<div style="align-self:flex-end;max-width:84%;padding:9px 12px;background:#e9e3d9;border-radius:13px 4px 13px 13px;font:400 13px/1.55 'Public Sans',sans-serif;color:#3a352f;animation:riseIn .3s ease">The 6:30 with Marco works great.</div>
+</sc-if>
+
+<sc-if value="{{ resolved }}">
+<div style="margin-top:6px;padding:12px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.1);border-radius:14px;animation:fadeIn .5s ease">
+<div style="font:700 9.5px 'Public Sans',sans-serif;letter-spacing:.12em;color:#6f6860;text-transform:uppercase;margin-bottom:9px">Booking record</div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Service</span><span style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">{{ recService }}</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(34,31,28,.06)"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Stylist</span><span style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">{{ recStylist }}</span></div>
+<div style="display:flex;justify-content:space-between;padding:6px 0"><span style="font:400 12px 'Public Sans',sans-serif;color:#6b645b">Price</span><span style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">{{ recPrice }} · {{ recDeposit }} dep.</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ offered }}">
+<div onClick="{{ pick630 }}" style="padding:12px 13px;background:oklch(0.972 0.022 170);border:1.5px solid #1f7d6e;border-radius:14px;animation:riseIn .35s ease">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px"><span style="font:700 19px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.025em">6:30 PM</span><span style="font:600 12.5px 'Public Sans',sans-serif;color:#57514a">Marco</span><span style="margin-left:auto;padding:3px 8px;background:#1f7d6e;color:#fff;border-radius:7px;font:700 9px 'Public Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase">Best</span></div>
+<div style="font:400 11.5px/1.5 'Public Sans',sans-serif;color:#1a6357">Only evening stylist certified on fades, and 3 of Jordan’s 4 visits.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ confirmed }}">
+<div style="padding:13px;background:oklch(0.972 0.022 170);border:1.5px solid #1f7d6e;border-radius:14px;text-align:center;animation:riseIn .35s ease">
+<div style="font:650 14.5px 'Public Sans',sans-serif;color:#164f45;margin-bottom:3px">Booked {{ chosen }} · {{ recDeposit }} taken</div>
+<div style="font:400 11.5px 'Public Sans',sans-serif;color:#1a6357">Text sent to ··· 4821</div>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{ held }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;background:#fffdfa;border-top:1.5px solid rgba(176,117,20,.55);border-radius:22px 22px 0 0;box-shadow:0 -14px 40px -14px rgba(34,31,28,.3);padding:14px 16px 16px;animation:riseIn .35s ease">
+<div style="width:36px;height:4px;border-radius:2px;background:rgba(34,31,28,.16);margin:0 auto 13px"></div>
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+<div style="width:8px;height:8px;border-radius:50%;background:#d9a53c;animation:breathe 1.4s ease-in-out infinite"></div>
+<span style="font:700 10px 'Public Sans',sans-serif;letter-spacing:.11em;color:#6b4a0d;text-transform:uppercase">Held — you decide</span>
+<span style="margin-left:auto;font:400 11.5px 'Public Sans',sans-serif;color:#6b4a0d">dead air {{ deadAir }}</span>
+</div>
+<div style="font:400 14px/1.5 'Public Sans',sans-serif;color:#221f1c;margin-bottom:11px">“someone good with <b style="color:#6b4a0d">facials</b>” came through at 38%. Nothing downstream is computed.</div>
+<div style="display:flex;align-items:center;gap:10px;padding:8px 11px;background:#f4efe8;border-radius:11px;margin-bottom:12px">
+<div style="width:28px;height:28px;border-radius:50%;background:#221f1c;flex:none;display:flex;align-items:center;justify-content:center"><div style="width:0;height:0;border-left:7px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px"></div></div>
+<div style="flex:1;height:20px">{{ clip }}</div>
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6b645b;flex:none">2.0s</span>
+</div>
+<div onClick="{{ accept }}" style="display:flex;align-items:center;gap:10px;padding:14px;background:#1f7d6e;border-radius:13px;margin-bottom:8px;cursor:pointer">
+<span style="font:650 15px 'Public Sans',sans-serif;color:#fff;flex:1">Accept “fades”</span>
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#fff">AI’s pick</span>
+</div>
+<div style="display:flex;gap:8px">
+<div onClick="{{ useFacial }}" style="flex:1;text-align:center;padding:13px;border:1px solid rgba(34,31,28,.16);border-radius:13px;font:600 13.5px 'Public Sans',sans-serif;color:#3a352f;cursor:pointer">Use “facials”</div>
+<div onClick="{{ askBack }}" style="flex:1;text-align:center;padding:13px;border:1px dashed rgba(34,31,28,.22);border-radius:13px;font:600 13.5px 'Public Sans',sans-serif;color:#3a352f;cursor:pointer">Ask Jordan</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ canConfirm }}">
+<div style="flex:none;padding:12px 16px 20px;background:#fffdfa;border-top:1px solid rgba(34,31,28,.09)">
+<div onClick="{{ confirmBooking }}" style="text-align:center;padding:15px;background:#1f7d6e;border-radius:13px;font:650 15px 'Public Sans',sans-serif;color:#fff;cursor:pointer">Confirm · take {{ recDeposit }}</div>
+</div>
+</sc-if>
+
+<div style="flex:none;display:flex;align-items:center;gap:8px;padding:12px 16px 20px;background:#fffdfa;border-top:1px solid rgba(34,31,28,.09)">
+<div onClick="{{ toggle }}" style="width:44px;height:44px;border-radius:50%;background:#221f1c;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer">
+<sc-if value="{{ paused }}" hint-placeholder-val="{{ true }}"><div style="width:0;height:0;border-left:11px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px"></div></sc-if>
+<sc-if value="{{ playing }}"><div style="display:flex;gap:3px"><div style="width:3.5px;height:14px;background:#fff"></div><div style="width:3.5px;height:14px;background:#fff"></div></div></sc-if>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:13px"><div style="width:14px;height:14px;border-radius:3px;border:1.5px solid #3a352f"></div></div>
+<div onClick="{{ takeOver }}" style="flex:1;text-align:center;padding:14px;background:#1f7d6e;border-radius:13px;font:650 14.5px 'Public Sans',sans-serif;color:#fff;cursor:pointer">Take over</div>
+<div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:#c0392b;border-radius:13px"><div style="width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.92)"></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1460,&quot;height&quot;:1020}}">
+class Component extends DCLogic {
+  state = { t: 7.5, playing: false, stage: "listening", resolution: null,
+            slotLost: false, chosen: "6:30", takenOver: false,
+            confirming: false, confirmed: false, flash: 0 };
+
+  DUR = 86;
+
+  componentDidMount() {
+    this._iv = setInterval(() => {
+      const s = this.state;
+      if (!s.playing || s.stage === "held") return;
+      const t = Math.min(s.t + 0.1, this.DUR);
+      const next = { t };
+      if (s.stage === "listening" && t >= 11) { next.stage = "held"; this._dead = Date.now(); this._deadAcc = 0; }
+      if (t >= this.DUR) next.playing = false;
+      this.setState(next);
+    }, 100);
+    this._hold = setInterval(() => {
+      if (this.state.stage === "held" && this.state.playing) this.forceUpdate();
+    }, 250);
+    this._dead = Date.now();
+    window.addEventListener("keydown", this._key = (e) => {
+      const tag = (e.target.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+      if (e.code === "Space") { e.preventDefault(); this.toggle(); }
+      else if (e.key === "Enter" && this.state.stage === "held") this.resolve("fade");
+      else if (e.key === "2" && this.state.stage === "held") this.resolve("facial");
+      else if (e.key === "3" && this.state.stage === "held") this.resolve("ask");
+      else if (e.key && e.key.toLowerCase() === "t" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault(); this.setState(s => ({ takenOver: !s.takenOver }));
+      }
+    });
+  }
+  componentWillUnmount() {
+    clearInterval(this._iv); clearInterval(this._hold);
+    window.removeEventListener("keydown", this._key);
+  }
+
+  toggle() {
+    if (this.state.t >= this.DUR) { this.reset(); return; }
+    const wasPlaying = this.state.playing;
+    if (this.state.stage === "held") {
+      if (wasPlaying) this._deadAcc = (this._deadAcc || 0) + (Date.now() - this._dead) / 1000;
+      else this._dead = Date.now();
+    }
+    this.setState(s => ({ playing: !s.playing }));
+  }
+  reset() {
+    clearTimeout(this._t1); clearTimeout(this._t2); clearTimeout(this._t3);
+    this._deadAcc = 0;
+    this.setState({ t: 0, playing: true, stage: "listening", resolution: null,
+      slotLost: false, chosen: "6:30", takenOver: false, confirming: false, confirmed: false });
+  }
+  resolve(kind) {
+    if (this.state.stage !== "held") return;
+    this.setState({ stage: "resolved", resolution: kind, flash: Date.now(), playing: true });
+    this._t1 = setTimeout(() => this.setState(s => ({ stage: "offered", tOffer: s.t })), 1100);
+    this._t2 = setTimeout(() => this.setState({ slotLost: true }), 6200);
+  }
+  jump(stage) {
+    clearTimeout(this._t1); clearTimeout(this._t2); clearTimeout(this._t3);
+    this._deadAcc = 0; this._dead = Date.now();
+    if (stage === "listening") this.setState({ t: 7.5, playing: false, stage: "listening",
+      resolution: null, slotLost: false, confirming: false, confirmed: false });
+    if (stage === "held") this.setState({ t: 11, playing: true, stage: "held",
+      resolution: null, slotLost: false, confirming: false, confirmed: false });
+    if (stage === "offered") this.setState({ t: 26, playing: true, stage: "offered",
+      resolution: "fade", tOffer: 24, slotLost: true, confirming: false, confirmed: false });
+    if (stage === "confirmed") this.setState({ t: 54, playing: false, stage: "confirmed",
+      resolution: "fade", tOffer: 24, tConfirm: 51, slotLost: true, confirming: false, confirmed: true });
+  }
+  pick(slot) { if (this.state.stage === "offered") this.setState({ chosen: slot }); }
+  confirm() {
+    if (this.state.stage !== "offered" || this.state.confirming) return;
+    this.setState({ confirming: true });
+    this._t3 = setTimeout(() => this.setState(s => ({ confirming: false, confirmed: true, stage: "confirmed", tConfirm: s.t })), 1500);
+  }
+
+  clock(s) {
+    const m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ":" + (r < 10 ? "0" : "") + r;
+  }
+
+  // Speech turns authored in real call seconds, matching the transcript timestamps.
+  TURNS = [[0, 5, "ai"], [6, 11, "caller"], [11, 13, "flag"],
+           [19, 24, "ai"], [38, 41, "caller"], [51, 56, "ai"]];
+
+  // One envelope, sampled over any window at any resolution — so the transport
+  // and the 2s replay clip are the same audio at different zoom levels.
+  sample(startSec, endSec, N, barW) {
+    let seed = 7;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    const rects = [];
+    for (let i = 0; i < N; i++) {
+      const sec = startSec + (i + 0.5) / N * (endSec - startSec);
+      const turn = this.TURNS.find(t => sec >= t[0] && sec < t[1]);
+      let h, fill;
+      if (!turn) { h = 4 + rnd() * 5; fill = "#ddd5c9"; }
+      else {
+        const [a, b, kind] = turn, p = (sec - a) / (b - a);
+        const env = Math.sin(Math.PI * Math.pow(p, 0.75));
+        const syl = 0.55 + 0.45 * Math.abs(Math.sin(p * Math.PI * 9 + i));
+        h = 8 + 84 * env * syl * (0.72 + 0.28 * rnd());
+        const loud = h > 52;
+        fill = kind === "flag" ? (loud ? "#d9a53c" : "#e6c98a")
+             : kind === "ai"   ? (loud ? "#1f7d6e" : "#8ebcb2")
+             : (loud ? "#c6bcac" : "#ddd5c9");
+      }
+      rects.push(React.createElement("rect", { key: i, x: i + (1 - barW) / 2, width: barW,
+        y: (100 - h) / 2, height: h, rx: 0.3, fill: fill }));
+    }
+    return React.createElement("svg", { viewBox: "0 0 " + N + " 100",
+      preserveAspectRatio: "none", style: { width: "100%", height: "100%", display: "block" } }, rects);
+  }
+  // A live call has no future audio and no known end, so the transport shows a
+  // trailing window that ends at now. Quantised to 0.25s so ticking is cheap.
+  WIN = 24;
+  buildWave(t) {
+    const end = Math.max(t, 3), start = Math.max(0, end - this.WIN);
+    return this.sample(start, end, 168, 0.64);
+  }
+  buildClip() { return this.sample(11, 13, 40, 0.58); }
+  waveWindow(t) {
+    const end = Math.max(t, 3);
+    return { start: Math.max(0, end - this.WIN), end: end };
+  }
+
+  renderVals() {
+    const s = this.state, facial = s.resolution === "facial";
+    const q = Math.round(s.t * 4) / 4;
+    if (this._q !== q) { this._q = q; this._wave = this.buildWave(q); }
+    if (!this._clip) this._clip = this.buildClip();
+    const win = this.waveWindow(q);
+    const flagIn = 11 >= win.start && 11 <= win.end;
+    const flagPct = Math.min(96, (11 - win.start) / (win.end - win.start) * 100);
+    const done = s.stage === "resolved" || s.stage === "offered" || s.stage === "confirmed";
+    const acc = this._deadAcc || 0;
+    const deadAir = s.stage !== "held" ? 0
+      : s.playing ? acc + Math.max(0, (Date.now() - this._dead) / 1000) : acc;
+    const rec = done ? {
+      service: facial ? "Haircut + facial" : "Haircut + beard trim, fade",
+      stylist: facial ? "Nina Alvarez" : "Marco Diaz",
+      duration: facial ? "60 min" : "45 min",
+      time: s.stage === "offered" || s.stage === "confirmed" ? "Tomorrow " + s.chosen + " PM" : null,
+      price: facial ? "$75" : "$48",
+      deposit: facial ? "$20" : "$15"
+    } : {};
+
+    return {
+      t: s.t, clock: this.clock(s.t), total: this.clock(this.DUR),
+      playing: s.playing, paused: !s.playing,
+      stage: s.stage, held: s.stage === "held", resolved: done,
+      notResolved: !done, listening: s.stage === "listening",
+      offered: s.stage === "offered" || s.stage === "confirmed",
+      confirmed: s.confirmed, confirming: s.confirming,
+      notConfirmed: !s.confirmed, canConfirm: s.stage === "offered" && !s.confirming,
+      takenOver: s.takenOver, aiLive: !s.takenOver,
+      resolution: s.resolution, choseFade: s.resolution === "fade",
+      choseFacial: facial, choseAsk: s.resolution === "ask",
+      slotLost: s.slotLost, chosen: s.chosen,
+      pick630: () => this.pick("6:30"), pick800: () => this.pick("8:00"),
+      is630: s.chosen === "6:30", is800: s.chosen === "8:00",
+      showGreet: s.t >= 0.4, showCaller: s.t >= 5.5, showStall: s.stage === "held",
+      showAiSlots: s.stage === "offered" || s.stage === "confirmed",
+      deadAir: deadAir.toFixed(0) + "s",
+      stampOffer: this.clock(s.tOffer || 0), stampConfirm: this.clock(s.tConfirm || 0),
+      playheadStyle: { position: "absolute", top: "-3px", bottom: "-3px",
+        right: 0, width: "2px", background: "#221f1c", borderRadius: "1px" },
+      windowLabel: "last " + Math.round(win.end - win.start) + "s",
+      wave: this._wave, clip: this._clip,
+      flagInWindow: flagIn,
+      flagStyle: { position: "absolute", left: flagPct + "%",
+        top: "-18px", transform: "translateX(-50%)", padding: "2px 7px",
+        background: "#8a5c0f", borderRadius: "6px", font: "700 9.5px 'Public Sans',sans-serif",
+        color: "#fff", letterSpacing: ".04em", whiteSpace: "nowrap" },
+      goListening: () => this.jump("listening"), goHeld: () => this.jump("held"),
+      goOffered: () => this.jump("offered"), goConfirmed: () => this.jump("confirmed"),
+      onListening: s.stage === "listening", onHeld: s.stage === "held",
+      onOffered: s.stage === "offered", onConfirmed: s.stage === "confirmed",
+      showCallerAccept: s.stage === "offered" || s.stage === "confirmed",
+      showAiAck: done,
+      stampAck: this.clock((s.tOffer || 24) - 5),
+      stampAccept: this.clock((s.tOffer || 24) + 14),
+      toggle: () => this.toggle(), reset: () => this.reset(),
+      accept: () => this.resolve("fade"), useFacial: () => this.resolve("facial"),
+      askBack: () => this.resolve("ask"),
+      confirmBooking: () => this.confirm(),
+      takeOver: () => this.setState(x => ({ takenOver: !x.takenOver })),
+      recService: rec.service, recStylist: rec.stylist, recDuration: rec.duration,
+      recTime: rec.time, recPrice: rec.price, recDeposit: rec.deposit,
+      hasTime: !!rec.time
+    };
+  }
+}
+</script>
+</body>
+</html>

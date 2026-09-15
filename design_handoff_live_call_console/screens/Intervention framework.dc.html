@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300..800;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#ece7df;font-family:"Public Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1f7d6e}a:hover{color:#175c51}
+@keyframes rec{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.dv-turn{padding:44px 48px 36px;border-bottom:1px solid rgba(34,31,28,.09)}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 22px}
+.dv-tid{font:700 10px "Space Mono",monospace;padding:4px 8px;background:#221f1c;color:#fff;border-radius:6px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 "Public Sans",sans-serif;color:#221f1c}
+.dv-opts{display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:700 10.5px "Space Mono",monospace;padding:3px 7px;background:rgba(34,31,28,.09);color:#221f1c;border-radius:6px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11.5px/1.3 "Public Sans",sans-serif;color:rgba(34,31,28,.55)}
+.dv-card{max-width:100%;border-radius:20px;box-shadow:0 2px 6px rgba(34,31,28,.06),0 20px 50px -26px rgba(34,31,28,.34);overflow:hidden}
+.dv-opt:target .dv-oid{background:#1f7d6e;color:#fff}
+.dv-next{margin:26px 0 0;font:12px/1.6 "Public Sans",sans-serif;color:rgba(34,31,28,.5)}
+</style></helmet>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Interventions as a system — holds propagate, colour reduced to three roles</span></div>
+
+<div style="max-width:1080px;margin:0 0 30px;padding:26px 28px;background:#fffdfa;border:1px solid rgba(34,31,28,.1);border-radius:18px">
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.12em;color:#6f6860;text-transform:uppercase;margin-bottom:8px">The correction</div>
+<div style="font:400 15px/1.6 'Public Sans',sans-serif;color:#3a352f;max-width:780px;margin-bottom:20px">A low-confidence field does not block <i>confirmation</i>. It starves everything downstream of it. If the service word is unresolved, the AI cannot score stylist capability, cannot compute duration, and therefore <b style="color:#221f1c">cannot produce slots at all</b>. The rail has to render that as withheld, not as a guess the operator might trust.</div>
+
+<div style="display:flex;align-items:stretch;gap:0;margin-bottom:22px;border:1px solid rgba(34,31,28,.1);border-radius:14px;overflow:hidden">
+<div style="flex:1;padding:14px 16px;background:#fffdfa;border-right:1px solid rgba(34,31,28,.08)">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#6b645b;text-transform:uppercase;margin-bottom:6px">Heard</div>
+<div style="font:600 13px 'Public Sans',sans-serif;color:#221f1c">Transcript</div>
+<div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#6b645b;margin-top:3px">words + per-token confidence</div>
+</div>
+<div style="flex:1;padding:14px 16px;background:oklch(0.965 0.04 82);border-right:1px solid rgba(176,117,20,.25)">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#6b4a0d;text-transform:uppercase;margin-bottom:6px">Held here</div>
+<div style="font:600 13px 'Public Sans',sans-serif;color:#6b4a0d">Understanding</div>
+<div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#6b4a0d;margin-top:3px">service word at 38%</div>
+</div>
+<div style="flex:1;padding:14px 16px;background:#f4efe8;border-right:1px solid rgba(34,31,28,.08)">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#6f6860;text-transform:uppercase;margin-bottom:6px">Not computed</div>
+<div style="font:600 13px 'Public Sans',sans-serif;color:#6f6860">Capability + duration</div>
+<div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#7d756b;margin-top:3px">needs the service</div>
+</div>
+<div style="flex:1;padding:14px 16px;background:#f4efe8;border-right:1px solid rgba(34,31,28,.08)">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#6f6860;text-transform:uppercase;margin-bottom:6px">Not computed</div>
+<div style="font:600 13px 'Public Sans',sans-serif;color:#6f6860">Slots</div>
+<div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#7d756b;margin-top:3px">needs duration</div>
+</div>
+<div style="flex:1;padding:14px 16px;background:#f4efe8">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#6f6860;text-transform:uppercase;margin-bottom:6px">Not computed</div>
+<div style="font:600 13px 'Public Sans',sans-serif;color:#6f6860">Confirm + deposit</div>
+<div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#7d756b;margin-top:3px">needs a slot</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:26px">
+<div>
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.12em;color:#6f6860;text-transform:uppercase;margin-bottom:11px">Every intervention has the same seven parts</div>
+<div style="display:flex;flex-direction:column;gap:7px;font:400 12.5px/1.5 'Public Sans',sans-serif;color:#57514a">
+<div><b style="color:#221f1c">Where</b> — the stage and field that stopped.</div>
+<div><b style="color:#221f1c">What</b> — one plain sentence, no model jargon.</div>
+<div><b style="color:#221f1c">Evidence</b> — the 2s clip, the decline code, the stale timestamp. Never “low confidence” alone.</div>
+<div><b style="color:#221f1c">Consequence</b> — what is withheld downstream, named.</div>
+<div><b style="color:#221f1c">Choices</b> — two or three resolutions, safest first, the AI’s pick marked.</div>
+<div><b style="color:#221f1c">Say next</b> — the line the caller hears after you choose. It is a phone call; every resolution has a spoken consequence.</div>
+<div><b style="color:#221f1c">Reversibility</b> — undo window, or an explicit warning that there is none.</div>
+</div>
+</div>
+<div>
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.12em;color:#6f6860;text-transform:uppercase;margin-bottom:11px">Four severities, by who must act</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;gap:11px;align-items:flex-start"><div style="width:9px;height:9px;border-radius:50%;background:#cfc5b6;flex:none;margin-top:4px"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">AI resolved it</div><div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#6b645b">Logged in the thread, collapsed. No rail presence.</div></div></div>
+<div style="display:flex;gap:11px;align-items:flex-start"><div style="width:9px;height:9px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Proceeding unless you object</div><div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#6b645b">Neutral card with a countdown. Silence is consent.</div></div></div>
+<div style="display:flex;gap:11px;align-items:flex-start"><div style="width:9px;height:9px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#6b4a0d">Held — you decide</div><div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#6b645b">Amber. The pipeline stops and says so. Keyboard-resolvable.</div></div></div>
+<div style="display:flex;gap:11px;align-items:flex-start"><div style="width:9px;height:9px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#6b4a0d">Held — you take the line</div><div style="font:400 11.5px/1.4 'Public Sans',sans-serif;color:#6b645b">Amber, filled. The AI cannot continue and stalls the caller.</div></div></div>
+</div>
+</div>
+</div>
+
+<div style="margin-top:20px;padding-top:17px;border-top:1px solid rgba(34,31,28,.09);display:grid;grid-template-columns:1fr 1fr;gap:26px">
+<div style="font:400 12.5px/1.55 'Public Sans',sans-serif;color:#57514a"><b style="color:#221f1c">Colour now carries three meanings only.</b> Warm neutral is everything the system knows. Teal is the AI’s own voice and its recommendation. Amber is “a human must act”, at two weights. Red survives as one mark: the recording dot. Stale and lost data are struck neutral, not red — they are out of date, not dangerous.</div>
+<div style="font:400 12.5px/1.55 'Public Sans',sans-serif;color:#57514a"><b style="color:#221f1c">A caller is on the line.</b> Every hold shows dead-air elapsed, and the AI is given a stall line to buy the operator time. An intervention that takes 20 seconds to resolve is a bad intervention even if it resolves correctly.</div>
+</div>
+</div>
+
+<div style="max-width:1320px;margin:0 0 34px;padding:24px 26px;background:#fffdfa;border:1px solid rgba(34,31,28,.1);border-radius:18px">
+<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px">
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.12em;color:#6f6860;text-transform:uppercase">Intervention catalogue</div>
+<div style="font:400 12.5px 'Public Sans',sans-serif;color:#6b645b">47 conditions the console has to absorb. Two of them are in the brief. Severity by dot.</div>
+</div>
+<div style="font:400 12.5px/1.55 'Public Sans',sans-serif;color:#57514a;max-width:820px;margin-bottom:20px">Each one resolves through the same card anatomy, so the operator learns the shape once. The catalogue is the argument for the framework: forty-seven bespoke designs is not shippable, one card with forty-seven payloads is.</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 26px">
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Line &amp; audio</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Packet loss — audio gaps mid-sentence</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Utterance unintelligible, not just one word</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Crosstalk — second voice on the line</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Dead air from the caller past 6s</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Caller talks over the AI mid-line</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#cfc5b6;flex:none;margin-top:4px"></div><span>Hold music misread as speech</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Call drops mid-booking</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Speech recognition</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span><b style="color:#6b4a0d">“fade” heard as “facial”</b> — in brief</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Stylist name ambiguous — Marco / Marcus</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Number misheard — “2:30” vs “12:30”</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Accent drives whole-turn confidence down</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Caller switches language</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#cfc5b6;flex:none;margin-top:4px"></div><span>Self-correction — “no wait, Friday”</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Spelling-out mode needed for a name</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Understanding</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Two services plausible from one phrase</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>“Next Friday” — this week or next</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Contradicts an earlier turn</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Booking for a third party</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Service not in the catalogue</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Out of scope — complaint, injury, staff matter</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Caller asks for a human</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Group booking — multiple people, one call</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Identity &amp; policy</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Number matches two customer records</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Caller is not the account holder</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Withheld number — no history available</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Customer flagged by the salon</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>No-show history raises the deposit</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Discount asked above the AI ceiling</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Minor — guardian consent required</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Request outside opening hours</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Availability &amp; staff</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span><b style="color:#221f1c">Slot taken while deciding</b> — in brief</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Availability data stale past 30s</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Calendar unreachable — cannot read at all</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Nothing fits the stated constraints</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Stylist capability unverified for the service</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Combo duration never measured together</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Stylist calls in sick during the call</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Chair or room conflict behind the slot</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Hold on the slot expiring in 20s</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Payment</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Deposit declined — insufficient funds</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Provider timeout — charge state unknown</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Card on file expired</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Bank challenge — cannot complete by voice</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Retry would risk a double charge</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>No card on file, deposit required</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Caller declines to pay a deposit</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">Aftermath</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Booking written, confirmation SMS bounced</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Caller drops after charge, before confirm</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Operator ends call with a hold open</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Summary confidence too low to auto-file</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Booking half-written — calendar yes, CRM no</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Caller hangs up mid-correction</span></div>
+</div>
+</div>
+
+<div>
+<div style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c;padding-bottom:7px;border-bottom:1px solid rgba(34,31,28,.12);margin-bottom:10px">System &amp; guardrails</div>
+<div style="display:flex;flex-direction:column;gap:6px;font:400 12px/1.4 'Public Sans',sans-serif;color:#57514a">
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>AI about to state a price it cannot honour</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>AI looping — third identical reply</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Model timeout — nothing to say</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#d9a53c;flex:none;margin-top:4px"></div><span>Tool call failed twice</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8d867d;flex:none;margin-top:4px"></div><span>Degraded mode — booking writes disabled</span></div>
+<div style="display:flex;gap:8px"><div style="width:7px;height:7px;border-radius:50%;background:#8a5c0f;flex:none;margin-top:4px"></div><span>Guardrail trip — AI muted itself</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opts">
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Held at Understanding — the rail shows what it refuses to compute</div>
+<div class="dv-card" style="width:1320px;background:#f4efe8;border:1px solid rgba(34,31,28,.1);display:flex;flex-direction:column">
+
+<div style="display:flex;align-items:center;gap:16px;padding:0 20px;height:56px;background:#fffdfa;border-bottom:1px solid rgba(34,31,28,.09);flex:none">
+<div style="display:flex;align-items:center;gap:9px"><div style="width:22px;height:22px;border-radius:8px;background:#1f7d6e"></div><span style="font:700 14.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.015em">Zoca Front Desk</span><span style="font:400 13px 'Public Sans',sans-serif;color:#6f6860">Luxe Salon</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding:5px 11px 5px 9px;border:1px solid rgba(34,31,28,.12);border-radius:20px">
+<div style="width:7px;height:7px;border-radius:50%;background:#b8412c;animation:rec 1.8s ease-in-out infinite"></div>
+<span style="font:700 10.5px 'Space Mono',monospace;letter-spacing:.08em;color:#57514a;text-transform:uppercase">Recording</span>
+<span style="width:1px;height:11px;background:rgba(34,31,28,.14)"></span>
+<span style="font:400 10.5px 'Space Mono',monospace;color:#6b645b">caller notified</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:5px 12px;background:oklch(0.965 0.04 82);border:1px solid rgba(176,117,20,.3);border-radius:20px">
+<div style="width:7px;height:7px;border-radius:50%;background:#d9a53c"></div>
+<span style="font:600 12.5px 'Public Sans',sans-serif;color:#6b4a0d">AI stalled — waiting on you</span>
+<span style="font:700 11.5px 'Space Mono',monospace;color:#6b4a0d">4s</span>
+</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+<div style="text-align:right"><div style="font:400 9.5px 'Space Mono',monospace;letter-spacing:.09em;color:#6f6860;text-transform:uppercase">Elapsed</div><div style="font:700 13.5px 'Space Mono',monospace;color:#221f1c;letter-spacing:-.02em">1:04</div></div>
+<div style="width:1px;height:26px;background:rgba(34,31,28,.1)"></div>
+<div style="display:flex;align-items:center;gap:7px"><div style="width:28px;height:28px;border-radius:50%;background:#e4ddd2;font:600 11px 'Public Sans',sans-serif;color:#6d665e;display:flex;align-items:center;justify-content:center">JS</div><span style="font:500 12.5px 'Public Sans',sans-serif;color:#57514a">Jasmeet</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex:1;min-height:0">
+
+<div style="width:278px;flex:none;background:#fffdfa;border-right:1px solid rgba(34,31,28,.09);padding:19px;display:flex;flex-direction:column;gap:17px">
+<div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+<div style="width:44px;height:44px;border-radius:15px;background:#e4ddd2;color:#57514a;font:600 16px 'Public Sans',sans-serif;display:flex;align-items:center;justify-content:center;letter-spacing:-.02em">JR</div>
+<div>
+<div style="font:650 16.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.02em;line-height:1.2">Jordan Rivera</div>
+<div style="font:400 11.5px 'Space Mono',monospace;color:#6b645b;margin-top:3px">+1 (415) ··· 4821</div>
+</div>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<span style="padding:4px 9px;background:#f1ede6;color:#57514a;border-radius:8px;font:600 11px 'Public Sans',sans-serif">Returning · 4 visits</span>
+<span style="padding:4px 9px;background:#f1ede6;color:#57514a;border-radius:8px;font:600 11px 'Public Sans',sans-serif">0 no-shows</span>
+</div>
+</div>
+
+<div style="padding:12px 13px;background:#f4efe8;border-radius:12px">
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.1em;color:#6b645b;text-transform:uppercase;margin-bottom:7px">Notes from the team</div>
+<div style="font:400 12.5px/1.5 'Public Sans',sans-serif;color:#3a352f">Prefers not to be upsold. Usually runs a few minutes late — Marco holds the chair.</div>
+</div>
+
+<div>
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.1em;color:#6f6860;text-transform:uppercase;margin-bottom:10px">Visit history</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Skin fade + beard trim</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Aug 22 · Marco · 45 min · $48</div></div></div>
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Skin fade</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Jul 30 · Marco · 30 min · $34</div></div></div>
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Skin fade</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Jun 14 · Marco · 30 min · $34</div></div></div>
+<div style="display:flex;gap:10px"><div style="width:2px;background:#ddd5c9;border-radius:1px;flex:none"></div><div><div style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">Haircut</div><div style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b;margin-top:2px">Jul 2 · Alex · 30 min · $30</div></div></div>
+</div>
+<div style="margin-top:11px;padding:9px 11px;background:#f4efe8;border-radius:10px;font:400 11.5px/1.45 'Public Sans',sans-serif;color:#57514a">Never booked a facial. <b style="color:#221f1c">4 of 4</b> visits were fades.</div>
+</div>
+
+<div style="margin-top:auto;padding:11px 13px;background:#f4efe8;border-radius:12px">
+<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><div style="width:11px;height:11px;border-radius:3px;border:1.5px solid #8d867d"></div><span style="font:600 11.5px 'Public Sans',sans-serif;color:#57514a">Visa ···· 4242 on file</span></div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6b645b">Charging always requires operator confirmation.</div>
+</div>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;background:#f4efe8">
+
+<div style="display:flex;align-items:center;gap:13px;padding:10px 22px;border-bottom:1px solid rgba(34,31,28,.08);flex:none">
+<span style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.11em;color:#6b645b;text-transform:uppercase">Transcript</span>
+<span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">Avg confidence <b style="font-family:'Space Mono',monospace;color:#221f1c">91%</b></span>
+<span style="margin-left:auto;display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:2px;background:#d9a53c"></div><span style="font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">1 word needs review</span></span>
+</div>
+
+<div style="flex:1;overflow:hidden;padding:18px 22px;display:flex;flex-direction:column;gap:14px">
+
+<div style="display:flex;gap:11px">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Zoca AI</span><span style="font:400 11px 'Space Mono',monospace;color:#6f6860">0:00</span></div>
+<div style="padding:10px 13px;background:#fffdfa;border:1px solid rgba(34,31,28,.08);border-radius:4px 13px 13px 13px;font:400 13.5px/1.55 'Public Sans',sans-serif;color:#3a352f">Thanks for calling Luxe Salon — how can I help you today?</div>
+</div>
+</div>
+
+<div style="display:flex;gap:11px;flex-direction:row-reverse">
+<div style="width:26px;height:26px;border-radius:9px;background:#e4ddd2;flex:none"></div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-end">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:5px"><span style="font:400 11px 'Space Mono',monospace;color:#6f6860">0:06</span><span style="font:650 12.5px 'Public Sans',sans-serif;color:#221f1c">Jordan</span></div>
+<div style="max-width:86%;padding:10px 13px;background:#e9e3d9;border-radius:13px 4px 13px 13px;font:400 13.5px/1.6 'Public Sans',sans-serif;color:#3a352f">Hi, I need a haircut and a beard trim tomorrow evening. I prefer someone good with <span style="background:oklch(0.93 0.06 82);border-bottom:2px solid #d9a53c;padding:0 3px;border-radius:3px;font-weight:600;color:#6b4a0d">facials</span></div>
+</div>
+</div>
+
+<div style="margin-left:37px;background:#fffdfa;border:1.5px solid rgba(176,117,20,.55);border-radius:15px;overflow:hidden;box-shadow:0 10px 26px -14px rgba(176,117,20,.5)">
+
+<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:oklch(0.965 0.04 82);border-bottom:1px solid rgba(176,117,20,.25)">
+<div style="width:8px;height:8px;border-radius:50%;background:#d9a53c"></div>
+<span style="font:700 10px 'Space Mono',monospace;letter-spacing:.09em;color:#6b4a0d;text-transform:uppercase">Held — you decide</span>
+<span style="font:400 12.5px 'Public Sans',sans-serif;color:#6b4a0d">Understanding · service</span>
+<span style="margin-left:auto;font:400 11px 'Space Mono',monospace;color:#6b4a0d">dead air 4s</span>
+</div>
+
+<div style="padding:14px 16px">
+<div style="font:400 14px/1.5 'Public Sans',sans-serif;color:#221f1c;margin-bottom:4px">One word decides the whole booking, and it came through at <b style="font-family:'Space Mono',monospace;color:#6b4a0d">38%</b>.</div>
+<div style="font:400 12.5px/1.5 'Public Sans',sans-serif;color:#57514a;margin-bottom:13px">Nothing downstream has been computed — no capability check, no duration, no slots. The AI is holding the line with “Let me check that for you.”</div>
+
+<div style="display:flex;align-items:center;gap:11px;padding:9px 12px;background:#f4efe8;border-radius:11px;margin-bottom:13px">
+<div style="width:26px;height:26px;border-radius:50%;background:#221f1c;flex:none;display:flex;align-items:center;justify-content:center"><div style="width:0;height:0;border-left:7px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px"></div></div>
+<div style="flex:1;display:flex;align-items:center;gap:1.5px;height:22px">
+<div style="flex:1;height:30%;background:#cfc5b6;border-radius:1px"></div><div style="flex:1;height:52%;background:#cfc5b6;border-radius:1px"></div><div style="flex:1;height:74%;background:#d9a53c;border-radius:1px"></div><div style="flex:1;height:96%;background:#d9a53c;border-radius:1px"></div><div style="flex:1;height:66%;background:#d9a53c;border-radius:1px"></div><div style="flex:1;height:88%;background:#d9a53c;border-radius:1px"></div><div style="flex:1;height:44%;background:#d9a53c;border-radius:1px"></div><div style="flex:1;height:62%;background:#cfc5b6;border-radius:1px"></div><div style="flex:1;height:28%;background:#cfc5b6;border-radius:1px"></div><div style="flex:1;height:18%;background:#cfc5b6;border-radius:1px"></div>
+</div>
+<span style="font:400 11px 'Space Mono',monospace;color:#6b645b;flex:none">0:11 · 2.0s</span>
+<span style="padding:5px 10px;background:#221f1c;border-radius:8px;font:600 11.5px 'Public Sans',sans-serif;color:#fff;flex:none">Replay <span style="font-family:'Space Mono',monospace;opacity:.6">R</span></span>
+</div>
+
+<div style="display:flex;gap:9px;align-items:stretch;margin-bottom:13px">
+<div style="flex:1;padding:11px 13px;background:oklch(0.972 0.022 170);border:1.5px solid #1f7d6e;border-radius:12px">
+<div style="display:flex;align-items:baseline;gap:7px;margin-bottom:5px"><span style="font:650 14.5px 'Public Sans',sans-serif;color:#164f45">“fades”</span><span style="padding:2px 6px;background:#1f7d6e;color:#fff;border-radius:5px;font:700 9px 'Space Mono',monospace;letter-spacing:.06em;text-transform:uppercase">AI’s pick</span></div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#1a6357">All 4 past visits. Pairs with beard trim. 45 min, Marco certified.</div>
+</div>
+<div style="flex:1;padding:11px 13px;background:#f4efe8;border:1px solid rgba(34,31,28,.13);border-radius:12px">
+<div style="display:flex;align-items:baseline;gap:7px;margin-bottom:5px"><span style="font:650 14.5px 'Public Sans',sans-serif;color:#221f1c">“facials”</span><span style="font:400 10px 'Space Mono',monospace;color:#6b645b">as heard</span></div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6d665e">Never booked. Not offered with beard trim. 60 min, treatment room.</div>
+</div>
+<div style="flex:1;padding:11px 13px;background:#f4efe8;border:1px dashed rgba(34,31,28,.22);border-radius:12px">
+<div style="font:650 14.5px 'Public Sans',sans-serif;color:#221f1c;margin-bottom:5px">Ask Jordan</div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6d665e">AI reconfirms aloud. Costs ~8s and admits the mishear.</div>
+</div>
+</div>
+
+<div style="padding:10px 13px;background:#f4efe8;border-radius:11px;margin-bottom:13px">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#6b645b;text-transform:uppercase;margin-bottom:5px">Jordan then hears</div>
+<div style="font:400 13px/1.5 'Public Sans',sans-serif;color:#3a352f;font-style:italic">“A fade and a beard trim with Marco — let me find you an evening slot.”</div>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px">
+<div style="display:flex;align-items:center;gap:7px;padding:9px 14px;background:#1f7d6e;border-radius:10px"><span style="font:650 13px 'Public Sans',sans-serif;color:#fff">Accept “fades”</span><span style="font:400 10.5px 'Space Mono',monospace;color:rgba(255,255,255,.65)">⏎</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 14px;border:1px solid rgba(34,31,28,.16);border-radius:10px"><span style="font:600 13px 'Public Sans',sans-serif;color:#3a352f">Use “facials”</span><span style="font:400 10.5px 'Space Mono',monospace;color:#6f6860">2</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 14px;border:1px solid rgba(34,31,28,.16);border-radius:10px"><span style="font:600 13px 'Public Sans',sans-serif;color:#3a352f">Have the AI ask</span><span style="font:400 10.5px 'Space Mono',monospace;color:#6f6860">3</span></div>
+<span style="margin-left:auto;font:400 11px 'Public Sans',sans-serif;color:#6f6860">Reversible for 10s after the AI speaks</span>
+</div>
+</div>
+</div>
+
+<div style="display:flex;gap:11px;align-items:center;margin-top:auto">
+<div style="width:26px;height:26px;border-radius:9px;background:#1f7d6e;flex:none"></div>
+<div style="display:flex;align-items:center;gap:9px;padding:9px 13px;background:#fffdfa;border:1px dashed rgba(34,31,28,.16);border-radius:4px 13px 13px 13px">
+<div style="display:flex;gap:3px"><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .2s infinite"></div><div style="width:5px;height:5px;border-radius:50%;background:#a49c92;animation:rec 1.2s ease-in-out .4s infinite"></div></div>
+<span style="font:400 12.5px 'Public Sans',sans-serif;color:#6b645b">stalling the caller · next stall line in 6s</span>
+</div>
+</div>
+</div>
+</div>
+<div style="width:346px;flex:none;background:#fffdfa;border-left:1px solid rgba(34,31,28,.09);display:flex;flex-direction:column">
+
+<div style="padding:15px 18px 13px;border-bottom:1px solid rgba(34,31,28,.08)">
+<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:3px">
+<span style="font:650 14.5px 'Public Sans',sans-serif;color:#221f1c;letter-spacing:-.01em">Booking being built</span>
+<span style="margin-left:auto;font:400 10.5px 'Space Mono',monospace;color:#6f6860">draft · not saved</span>
+</div>
+<div style="font:400 11.5px/1.45 'Public Sans',sans-serif;color:#6b645b">Fills top-down as the AI hears things. A held field withholds everything under it.</div>
+</div>
+
+<div style="flex:1;overflow:hidden;padding:15px 18px;display:flex;flex-direction:column">
+
+<div style="display:flex;align-items:center;gap:9px;padding:9px 12px;background:#f1ede6;border-radius:11px;margin-bottom:14px">
+<span style="font:700 9px 'Space Mono',monospace;letter-spacing:.09em;color:#6b645b;text-transform:uppercase">Queue</span>
+<span style="font:600 12.5px 'Public Sans',sans-serif;color:#221f1c">1 hold</span>
+<span style="margin-left:auto;font:400 11.5px 'Public Sans',sans-serif;color:#6b645b">0 waiting behind it</span>
+</div>
+
+<div style="display:flex;flex-direction:column">
+
+<div style="padding-bottom:13px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6b645b;width:64px;flex:none">Customer</span>
+<span style="font:600 13.5px 'Public Sans',sans-serif;color:#221f1c">Jordan Rivera</span>
+<span style="margin-left:auto;font:400 10px 'Space Mono',monospace;color:#7d756b">caller ID</span>
+</div>
+</div>
+
+<div style="height:1px;background:rgba(34,31,28,.07)"></div>
+
+<div style="padding:13px 12px;margin:0 -12px;background:oklch(0.965 0.04 82);border-radius:11px">
+<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px">
+<span style="font:400 11px/1.5 'Public Sans',sans-serif;color:#6b4a0d;width:64px;flex:none">Service</span>
+<span style="font:650 13.5px/1.4 'Public Sans',sans-serif;color:#6b4a0d">Haircut + beard trim<br><span style="text-decoration:underline;text-decoration-style:wavy;text-decoration-color:#d9a53c;text-underline-offset:3px">+ fade or facial?</span></span>
+<span style="margin-left:auto;font:700 10.5px 'Space Mono',monospace;color:#6b4a0d;flex:none">38%</span>
+</div>
+<div style="display:flex;align-items:center;gap:7px;padding-left:72px">
+<div style="width:7px;height:7px;border-radius:50%;background:#d9a53c"></div>
+<span style="font:600 11.5px 'Public Sans',sans-serif;color:#6b4a0d">Held — decide in the transcript</span>
+</div>
+</div>
+
+<div style="display:flex;gap:10px;padding:11px 0 0">
+<div style="width:64px;flex:none"></div>
+<div style="flex:1;padding-left:13px;border-left:2px dashed rgba(176,117,20,.4)">
+<div style="font:400 11.5px/1.5 'Public Sans',sans-serif;color:#6b645b">Everything below is <b style="color:#57514a">withheld</b>, not unknown. The AI has the data and is refusing to guess.</div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:2px;margin-top:11px;opacity:.62">
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860;width:64px;flex:none">Stylist</span>
+<span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span>
+<span style="margin-left:auto;font:400 10.5px 'Public Sans',sans-serif;color:#7d756b">needs the service</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860;width:64px;flex:none">Duration</span>
+<span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span>
+<span style="margin-left:auto;font:400 10.5px 'Public Sans',sans-serif;color:#7d756b">45 or 60 min</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860;width:64px;flex:none">Time</span>
+<span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span>
+<span style="margin-left:auto;font:400 10.5px 'Public Sans',sans-serif;color:#7d756b">no slots computed</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(34,31,28,.06)">
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860;width:64px;flex:none">Price</span>
+<span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span>
+<span style="margin-left:auto;font:400 10.5px 'Public Sans',sans-serif;color:#7d756b">$48 or $75</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:9px 0">
+<span style="font:400 11px 'Public Sans',sans-serif;color:#6f6860;width:64px;flex:none">Deposit</span>
+<span style="font:400 13px 'Public Sans',sans-serif;color:#7d756b">——</span>
+<span style="margin-left:auto;font:400 10.5px 'Public Sans',sans-serif;color:#7d756b">needs the price</span>
+</div>
+</div>
+
+<div style="margin-top:14px;padding:12px 13px;background:oklch(0.972 0.022 170);border:1px solid rgba(31,125,110,.3);border-radius:12px">
+<div style="font:700 9px 'Space Mono',monospace;letter-spacing:.1em;color:#1f7d6e;text-transform:uppercase;margin-bottom:7px">Accepting “fades” computes</div>
+<div style="display:flex;flex-direction:column;gap:4px;font:400 12px/1.45 'Public Sans',sans-serif;color:#1a6357">
+<div>Marco — certified, 3 of 4 past visits</div>
+<div>45 min · $48 · $15 deposit</div>
+<div>3 evening slots, best at 6:30 PM</div>
+</div>
+<div style="margin-top:9px;padding-top:8px;border-top:1px solid rgba(31,125,110,.2);font:400 11px 'Public Sans',sans-serif;color:#1f7d6e">Availability was read 4s ago — still fresh.</div>
+</div>
+</div>
+
+<div style="margin-top:auto;padding-top:14px">
+<div style="display:flex;align-items:center;justify-content:center;gap:9px;padding:13px;background:#f1ede6;border-radius:12px">
+<span style="font:650 14px 'Public Sans',sans-serif;color:#6f6860">Confirm booking</span>
+<span style="padding:2px 7px;background:rgba(34,31,28,.1);color:#6b645b;border-radius:6px;font:700 9px 'Space Mono',monospace;letter-spacing:.07em;text-transform:uppercase">withheld</span>
+</div>
+<div style="margin-top:7px;font:400 11px/1.4 'Public Sans',sans-serif;color:#6b645b;text-align:center">Three fields short. Clearing the hold fills all of them.</div>
+</div>
+</div>
+</div>
+</div>
+<div style="flex:none;background:#fffdfa;border-top:1px solid rgba(34,31,28,.09);padding:13px 20px 15px">
+<div style="display:flex;align-items:center;gap:15px;margin-bottom:12px">
+<div style="width:32px;height:32px;border-radius:50%;background:#221f1c;flex:none;display:flex;align-items:center;justify-content:center"><div style="width:0;height:0;border-left:8px solid #fff;border-top:5.5px solid transparent;border-bottom:5.5px solid transparent;margin-left:3px"></div></div>
+<span style="font:700 12.5px 'Space Mono',monospace;color:#221f1c;letter-spacing:-.02em;flex:none">1:04</span>
+<div style="flex:1;min-width:0;position:relative;height:40px">
+<div style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;gap:1px">
+{{ waveform }}
+</div>
+<div style="position:absolute;left:83%;top:-3px;bottom:-3px;width:2px;background:#221f1c;border-radius:1px"></div>
+<div style="position:absolute;left:83%;top:-9px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#221f1c"></div>
+<div style="position:absolute;left:33%;top:-19px;transform:translateX(-50%);padding:2px 7px;background:#8a5c0f;border-radius:6px;font:700 9px 'Space Mono',monospace;color:#fff;letter-spacing:.05em;white-space:nowrap">38% · “facials”</div>
+</div>
+<span style="font:400 12px 'Space Mono',monospace;color:#6f6860;flex:none">1:26</span>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px">
+<div style="display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px"><div style="width:12px;height:12px;border-radius:3px;border:1.5px solid #57514a"></div><span style="font:600 12.5px 'Public Sans',sans-serif;color:#3a352f">Mute</span><span style="font:400 10.5px 'Space Mono',monospace;color:#6f6860">M</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px"><div style="width:12px;height:12px;border-radius:3px;border:1.5px solid #57514a"></div><span style="font:600 12.5px 'Public Sans',sans-serif;color:#3a352f">Speaker</span><span style="font:400 10.5px 'Space Mono',monospace;color:#6f6860">S</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px"><span style="font:600 12.5px 'Public Sans',sans-serif;color:#3a352f">Replay 5s</span><span style="font:400 10.5px 'Space Mono',monospace;color:#6f6860">R</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 13px;background:#f1ede6;border:1px solid rgba(34,31,28,.1);border-radius:11px"><span style="font:600 12.5px 'Public Sans',sans-serif;color:#3a352f">Stall the caller</span><span style="font:400 10.5px 'Space Mono',monospace;color:#6f6860">H</span></div>
+
+<div style="margin-left:auto;display:flex;align-items:center;gap:11px">
+<div style="text-align:right;max-width:216px"><div style="font:600 11.5px 'Public Sans',sans-serif;color:#3a352f">Taking over mutes the AI</div><div style="font:400 10.5px/1.35 'Public Sans',sans-serif;color:#6b645b">It keeps transcribing and drafting. Nothing is sent or charged without you.</div></div>
+<div style="display:flex;align-items:center;gap:9px;padding:11px 19px;background:#1f7d6e;border-radius:12px;box-shadow:0 6px 16px -9px rgba(31,125,110,.75),inset 0 0 0 1px rgba(255,255,255,.12)">
+<div style="width:13px;height:13px;border-radius:4px;background:rgba(255,255,255,.9)"></div>
+<span style="font:650 14px 'Public Sans',sans-serif;color:#fff;letter-spacing:-.01em">Take over the call</span>
+<span style="padding:2px 6px;background:rgba(255,255,255,.18);border-radius:5px;font:700 9.5px 'Space Mono',monospace;color:rgba(255,255,255,.85)">⌘⇧T</span>
+</div>
+<div style="display:flex;align-items:center;gap:7px;padding:11px 15px;border:1.5px solid rgba(34,31,28,.16);border-radius:12px"><span style="font:650 13px 'Public Sans',sans-serif;color:#3a352f">End call</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<p class="dv-next">Next: “build the held-state console for <a class="dv-oid" href="#2a">2a</a>” · “show two holds at once” · “mobile”</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Zoca Front Desk — live call console, design pass</span></div>
+
+<div style="max-width:880px;margin:0 0 34px;padding:26px 28px;background:#fffdfa;border:1px solid rgba(34,31,28,.1);border-radius:18px">
+<div style="font:700 9.5px 'Space Mono',monospace;letter-spacing:.12em;color:#6f6860;text-transform:uppercase;margin-bottom:15px">What I read in the current build</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;font:13.5px/1.55 'Public Sans',sans-serif;color:#57514a">
+<div><b style="color:#221f1c">The screen has no spine.</b> Everything lives in one centre column with a floating caller card beside it and a large empty left half. Nothing tells the operator where to look when the call is live.</div>
+<div><b style="color:#221f1c">Audio is decorative.</b> <span style="font-family:'Space Mono',monospace;font-size:12.5px">0:19 / 0:21</span> in the header is the only trace of the call. The assignment asks for audio state connected to the transcript.</div>
+<div><b style="color:#221f1c">Uncertainty is hidden, not surfaced.</b> Every turn renders identically at full confidence. There is nowhere for “fade” misheard as “facial” to live, so the human-judgment moment never appears.</div>
+<div><b style="color:#221f1c">The booking is a receipt, not a decision.</b> Slots, reasoning, and the edit affordances all collapse into one post-hoc summary table. The operator never sees why Marco at 6:30 was the recommendation.</div>
+<div><b style="color:#221f1c">Agent steps and speech compete.</b> Bordered “Done” rows interleave with transcript bubbles at the same visual weight, so the thread reads as a log rather than a conversation.</div>
+<div><b style="color:#221f1c">Take Over has no gravity.</b> A disabled footer button carries the assignment’s most important interaction. Handoff should be the most deliberate control on the screen.</div>
+</div>
+<div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(34,31,28,.09);font:13.5px/1.6 'Public Sans',sans-serif;color:#57514a"><b style="color:#221f1c">The redesign:</b> three fixed zones — who is calling, what is being said, what the AI wants to do — with one transport bar across the bottom that owns audio and handoff. Confidence is rendered inline in the transcript and propagates into the booking panel, so low-confidence words visibly block confirmation until a human resolves them.</div>
+</div>
+
+<div style="max-width:880px;padding:15px 18px;background:#f4efe8;border:1px dashed rgba(34,31,28,.2);border-radius:14px;font:400 13px/1.6 'Public Sans',sans-serif;color:#57514a">The first-pass console lives in <b style="color:#221f1c">Zoca Front Desk Console v1.dc.html</b> — lifted out of this file so two full 1320px consoles are not laid out at once. Its diagnosis above still applies; turn <a class="dv-oid" href="#t2">2</a> supersedes its colour use and its right rail.</div>
+<p class="dv-next">Next: “the payment-timeout case” · “two holds at once” · “mobile”</p>
+</section></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1420,&quot;height&quot;:1000}}">class Component extends DCLogic {
+  renderVals() {
+    if (!this._wave) {
+      const bars = this.buildBars();
+      const N = bars.length;
+      this._wave = React.createElement("svg", {
+        viewBox: "0 0 " + N + " 100", preserveAspectRatio: "none",
+        style: { width: "100%", height: "100%", display: "block" }
+      }, bars.map((b, i) => React.createElement("rect", {
+        key: i, x: i + 0.18, width: 0.64, y: (100 - b.h) / 2, height: b.h,
+        rx: 0.3, fill: b.color
+      })));
+    }
+    return { waveform: this._wave };
+  }
+  buildBars() {
+    // Speech envelope for a 1:26 call: bursts per speaker turn with near-silent gaps.
+    // turns: [startFrac, endFrac, kind] — kind drives colour segmentation.
+    const turns = [
+      [0.00, 0.09, "ai"], [0.12, 0.30, "caller"], [0.30, 0.37, "flag"],
+      [0.40, 0.52, "ai"], [0.55, 0.72, "caller"], [0.76, 0.83, "ai"]
+    ];
+    const N = 190, PLAYHEAD = 0.83;
+    const colors = {
+      past:   "#ddd5c9", pastLoud: "#cfc5b6",
+      flag:   "#d9a53c", flagSoft: "#e6c98a",
+      ai:     "#1f7d6e", aiSoft:   "#7fb3a9",
+      future: "#e8e2d9", silence:  "#e4ddd2"
+    };
+    let seed = 7;
+    const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    const bars = [];
+    for (let i = 0; i < N; i++) {
+      const f = i / N;
+      const turn = turns.find(t => f >= t[0] && f < t[1]);
+      let h, color;
+      if (!turn) {
+        h = 4 + rnd() * 5;
+        color = f > PLAYHEAD ? colors.future : colors.silence;
+      } else {
+        const [s, e, kind] = turn;
+        const p = (f - s) / (e - s);
+        // attack/decay envelope + syllable ripple + jitter
+        const env = Math.sin(Math.PI * Math.pow(p, 0.75));
+        const syl = 0.55 + 0.45 * Math.abs(Math.sin(p * Math.PI * 9 + i));
+        h = 8 + 84 * env * syl * (0.72 + 0.28 * rnd());
+        const loud = h > 52;
+        if (f > PLAYHEAD) color = colors.future;
+        else if (kind === "flag") color = loud ? colors.flag : colors.flagSoft;
+        else if (kind === "ai") color = loud ? colors.ai : colors.aiSoft;
+        else color = loud ? colors.pastLoud : colors.past;
+      }
+      bars.push({ h: +h.toFixed(1), color: color });
+    }
+    return bars;
+  }
+}</script>
+</body>
+</html>

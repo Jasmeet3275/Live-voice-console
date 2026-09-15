@@ -9,7 +9,7 @@ export const SHORTCUTS: { keys: string[]; label: string; when?: string }[] = [
   { keys: ['S'], label: 'Speaker on / off' },
   { keys: ['T'], label: 'Take over the call', when: 'AI in control' },
   { keys: ['H'], label: 'Hand back to the AI', when: 'you in control' },
-  { keys: ['B'], label: 'Open the booking wizard', when: 'you in control' },
+  { keys: ['B'], label: 'Widen / narrow the booking record' },
   { keys: ['E'], label: 'End the call' },
   { keys: ['Esc'], label: 'Close a dialog · at a checkpoint, take over' },
   { keys: ['?'], label: 'Show keyboard shortcuts' },
@@ -67,7 +67,7 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
         case 's': h.toggleSpeaker(); break
         case 't': if (!h.inControl) h.takeOver(); break
         case 'h': if (h.inControl) h.handBack(); break
-        case 'b': if (h.inControl) h.book(); break
+        case 'b': h.book(); break
         case 'e': h.requestEnd(); break
       }
     }
