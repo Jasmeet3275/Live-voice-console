@@ -1,5 +1,5 @@
 import { ChevronsLeft } from 'lucide-react'
-import type { Caller } from '@/components/domain/CallerPanel'
+import type { Caller } from '@/components/organisms/CallerPanel'
 import { cn } from '@/lib/cn'
 
 /* ------------------------------------------------------------------ *

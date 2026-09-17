@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Check, ChevronsRight, Plus, X } from 'lucide-react'
-import { Spinner, Select, Pressable } from '@/components/ui'
+import { Spinner, Select, Pressable } from '@/components/atoms'
 import { SERVICES, STYLISTS, SLOT_TIMES, deriveServiceTotals } from '@/mock/salon'
 import { cn } from '@/lib/cn'
 

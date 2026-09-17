@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ConfidenceMeter } from './ConfidenceMeter'
+import { ConfidenceMeter } from '@/components/molecules/ConfidenceMeter'
 
 describe('ConfidenceMeter', () => {
   it('renders as a meter with the percentage and label', () => {

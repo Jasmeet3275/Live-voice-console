@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Pressable } from './Pressable'
+import { Pressable } from '@/components/atoms/Pressable'
 
 describe('Pressable', () => {
   it('renders a real button defaulting to type="button"', () => {

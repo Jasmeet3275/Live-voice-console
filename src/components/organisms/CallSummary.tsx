@@ -6,7 +6,7 @@ import {
   Receipt,
   ListChecks,
 } from 'lucide-react'
-import { Card, CardHeader, StatusChip, Divider, type Status } from '@/components/ui'
+import { Card, CardHeader, StatusChip, Divider, type Status } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 
 export interface CallSummaryProps {

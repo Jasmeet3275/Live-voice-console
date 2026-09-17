@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import { Modal, IconButton } from '@/components/ui'
+import { Modal, IconButton } from '@/components/atoms'
 import { SHORTCUT_GROUPS, type Shortcut } from '@/hooks/useKeyboardShortcuts'
 import { cn } from '@/lib/cn'
 

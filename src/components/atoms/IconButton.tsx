@@ -1,6 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/cn'
-import type { ButtonVariant } from './Button'
+import type { ButtonVariant } from '@/components/atoms/Button'
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-accent border border-accent text-accent-fg hover:bg-accent-hover hover:border-accent-hover',

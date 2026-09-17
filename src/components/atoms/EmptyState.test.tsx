@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { EmptyState } from './EmptyState'
-import { Kbd } from './Kbd'
+import { EmptyState } from '@/components/atoms/EmptyState'
+import { Kbd } from '@/components/atoms/Kbd'
 
 describe('EmptyState', () => {
   it('renders title, description and an action slot', () => {

@@ -1,5 +1,5 @@
-import { CheckpointSheet, type CheckpointOption } from '@/components/domain/CheckpointSheet'
-import { type Slot } from '@/components/domain/SlotCard'
+import { CheckpointSheet, type CheckpointOption } from '@/components/organisms/CheckpointSheet'
+import { type Slot } from '@/components/molecules/SlotCard'
 import { cn } from '@/lib/cn'
 
 /* ------------------------------------------------------------------ *

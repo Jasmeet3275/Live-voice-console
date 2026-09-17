@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { CallStore } from '@/store/callStore'
 import { CallStoreContext } from '@/store/callContext'
-import { InlineCheckpoint } from './InlineCheckpoint'
+import { InlineCheckpoint } from '@/components/organisms/InlineCheckpoint'
 import type { CallTransport, ClientCommand, ServerEvent, Slot, TranscriptWord } from '@/types/call'
 
 class FakeTransport implements CallTransport {

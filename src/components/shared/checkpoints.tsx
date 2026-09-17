@@ -1,4 +1,4 @@
-import { CheckpointSheet, ClipPlayerRow, type CheckpointOption } from '@/components/domain/CheckpointSheet'
+import { CheckpointSheet, ClipPlayerRow, type CheckpointOption } from '@/components/organisms/CheckpointSheet'
 
 /* ------------------------------------------------------------------ *
  * The checkpoint family — one CheckpointSheet, four variants. Each

@@ -1,5 +1,5 @@
 import { User, Bot, Headset, MicOff } from 'lucide-react'
-import { Tooltip } from '@/components/ui'
+import { Tooltip } from '@/components/atoms'
 
 export type SpeakerRole = 'customer' | 'ai' | 'operator'
 

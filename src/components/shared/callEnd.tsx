@@ -1,6 +1,6 @@
 import { Play } from 'lucide-react'
-import { CheckpointSheet, type CheckpointOption } from '@/components/domain/CheckpointSheet'
-import { ThreadDivider } from '@/components/domain/threadParts'
+import { CheckpointSheet, type CheckpointOption } from '@/components/organisms/CheckpointSheet'
+import { ThreadDivider } from '@/components/molecules/threadParts'
 
 /* ------------------------------------------------------------------ *
  * Two ways a call stops — both render as the LAST item in the thread

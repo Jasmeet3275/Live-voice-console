@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { StepShell } from './StepShell'
+import { StepShell } from '@/components/molecules/StepShell'
 
 describe('StepShell', () => {
   it('renders the label, a status chip, and body content', () => {

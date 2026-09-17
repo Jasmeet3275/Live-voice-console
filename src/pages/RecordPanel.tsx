@@ -1,5 +1,5 @@
 import { useCall, useCallSend } from '@/hooks/useCall'
-import { BookingRecordPanel } from '@/components/domain/BookingRecordPanel'
+import { BookingRecordPanel } from '@/components/organisms'
 import { deriveBookingRecord } from './bookingRecord'
 import { CALLER, OPERATOR } from './caller'
 

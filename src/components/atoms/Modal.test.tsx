@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Modal } from './Modal'
+import { Modal } from '@/components/atoms/Modal'
 
 function Fixture(props: Partial<React.ComponentProps<typeof Modal>> & { open: boolean }) {
   return (

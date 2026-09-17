@@ -1,6 +1,6 @@
-import { Spinner } from '@/components/ui'
+import { Spinner } from '@/components/atoms'
 import { cn } from '@/lib/cn'
-import type { BookingFields, ConfirmState } from '@/components/domain/BookingRecordPanel'
+import type { BookingFields, ConfirmState } from '@/components/organisms/BookingRecordPanel'
 
 /* ------------------------------------------------------------------ *
  * BookingRail — the right "booking record" bar (showcase / mobile demo

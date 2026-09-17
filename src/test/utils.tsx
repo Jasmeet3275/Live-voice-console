@@ -1,6 +1,6 @@
 import { render, type RenderOptions } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
-import { TooltipProvider } from '@/components/ui'
+import { TooltipProvider } from '@/components/atoms'
 
 function Providers({ children }: { children: ReactNode }) {
   // Radix Tooltip triggers require a provider; many domain components use it.
@@ -13,3 +13,4 @@ export function renderUI(ui: ReactElement, options?: Omit<RenderOptions, 'wrappe
 }
 
 export * from '@testing-library/react'
+

@@ -28,3 +28,6 @@ cypress/downloads
 *.njsproj
 *.sln
 *.sw?
+
+# storybook
+storybook-static

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { TranscriptLine } from './TranscriptLine'
-import type { TranscriptWord } from './ConfidenceWord'
+import { TranscriptLine } from '@/components/molecules/TranscriptLine'
+import type { TranscriptWord } from '@/components/atoms/ConfidenceWord'
 
 const words: TranscriptWord[] = [
   { text: 'I', confidence: 0.99 },

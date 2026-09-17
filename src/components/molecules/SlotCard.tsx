@@ -1,5 +1,5 @@
 import { Star, Clock, Check } from 'lucide-react'
-import { Avatar, Badge, Pressable } from '@/components/ui'
+import { Avatar, Badge, Pressable } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 
 export interface Slot {

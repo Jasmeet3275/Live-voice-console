@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { StatusChip } from './StatusChip'
+import { StatusChip } from '@/components/atoms/StatusChip'
 
 describe('StatusChip', () => {
   it('shows the default label per status', () => {

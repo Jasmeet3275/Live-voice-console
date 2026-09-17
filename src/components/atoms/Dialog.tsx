@@ -2,7 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { Dialog as RadixDialog } from 'radix-ui'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/cn'
-import { IconButton } from './IconButton'
+import { IconButton } from '@/components/atoms/IconButton'
 
 export function Dialog({
   open,

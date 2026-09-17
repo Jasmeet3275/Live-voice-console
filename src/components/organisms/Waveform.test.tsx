@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Waveform } from './Waveform'
+import { Waveform } from '@/components/organisms/Waveform'
 
 const data = [0.2, 0.4, 0.6, 0.8]
 

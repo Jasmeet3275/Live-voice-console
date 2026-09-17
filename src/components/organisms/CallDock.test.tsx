@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { renderUI } from '@/test/utils'
-import { CallDock, type CallDockProps } from './CallDock'
+import { CallDock, type CallDockProps } from '@/components/organisms/CallDock'
 
 function props(over: Partial<CallDockProps> = {}): CallDockProps {
   return {

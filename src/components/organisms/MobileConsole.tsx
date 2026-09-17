@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Mic, Headset, PhoneOff, Bot } from 'lucide-react'
-import { WaveformTrack } from '@/components/domain/WaveformTrack'
-import { CustomerRail } from '@/components/domain/CustomerRail'
-import { BookingRail, type BookingFields, type ConfirmState } from '@/components/domain/BookingRail'
-import { AiThinkingBubble } from '@/components/domain/threadParts'
-import { FlaggedWordMobile } from '@/components/domain/consoleShared'
-import type { Caller } from '@/components/domain/CallerPanel'
+import { WaveformTrack } from '@/components/organisms/WaveformTrack'
+import { CustomerRail } from '@/components/organisms/CustomerRail'
+import { BookingRail, type BookingFields, type ConfirmState } from '@/components/molecules/BookingRail'
+import { AiThinkingBubble } from '@/components/molecules/threadParts'
+import { FlaggedWordMobile } from '@/components/shared/consoleShared'
+import type { Caller } from '@/components/organisms/CallerPanel'
 import { cn } from '@/lib/cn'
 
 /* ------------------------------------------------------------------ *

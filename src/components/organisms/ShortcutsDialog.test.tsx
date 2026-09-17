@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { ShortcutsDialog } from './ShortcutsDialog'
+import { ShortcutsDialog } from '@/components/organisms/ShortcutsDialog'
 
 describe('ShortcutsDialog', () => {
   it('lists the operator shortcuts when open', () => {

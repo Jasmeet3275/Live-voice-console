@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { TooltipProvider, ToastProvider } from '@/components/ui'
+import { TooltipProvider, ToastProvider } from '@/components/atoms'
 import { ConsolePage } from '@/pages/ConsolePage'
-import { Showcase } from '@/components/domain/Showcase'
+import { Showcase } from '@/components/organisms'
 import { scenarios } from '@/mock/scenarios'
 
 export default function App() {

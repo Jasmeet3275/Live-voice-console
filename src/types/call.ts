@@ -1,6 +1,6 @@
-import type { Slot } from '@/components/domain/SlotCard'
-import type { TranscriptWord } from '@/components/domain/ConfidenceWord'
-import type { Status } from '@/components/ui'
+import type { Slot } from '@/components/molecules'
+import type { TranscriptWord } from '@/components/atoms'
+import type { Status } from '@/components/atoms'
 
 export type { Slot, TranscriptWord }
 

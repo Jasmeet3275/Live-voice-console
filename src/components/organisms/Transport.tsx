@@ -1,6 +1,6 @@
 import { Play, Pause, Mic, MicOff, Volume2, VolumeX, RotateCcw, Hand, PhoneOff, Bot } from 'lucide-react'
-import { Tooltip } from '@/components/ui'
-import { WaveformTrack } from '@/components/domain/WaveformTrack'
+import { Tooltip } from '@/components/atoms'
+import { WaveformTrack } from '@/components/organisms/WaveformTrack'
 import { cn } from '@/lib/cn'
 
 /* ------------------------------------------------------------------ *

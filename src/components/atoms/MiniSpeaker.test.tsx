@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderUI } from '@/test/utils'
-import { MiniSpeaker } from './MiniSpeaker'
+import { MiniSpeaker } from '@/components/atoms/MiniSpeaker'
 
 describe('MiniSpeaker', () => {
   it('labels the speaker and its speaking state', () => {

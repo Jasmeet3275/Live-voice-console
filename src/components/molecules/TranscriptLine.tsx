@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { cn } from '@/lib/cn'
-import { ConfidenceWord, type TranscriptWord } from './ConfidenceWord'
+import { ConfidenceWord, type TranscriptWord } from '@/components/atoms/ConfidenceWord'
 
 export type TranscriptSpeaker = 'caller' | 'ai'
 

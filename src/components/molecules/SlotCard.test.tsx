@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { SlotCard, type Slot } from './SlotCard'
+import { SlotCard, type Slot } from '@/components/molecules/SlotCard'
 
 const slot: Slot = {
   id: 's1',

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { CallSummary } from './CallSummary'
+import { CallSummary } from '@/components/organisms/CallSummary'
 
 describe('CallSummary', () => {
   it('renders the booking recap with status, details and notes', () => {

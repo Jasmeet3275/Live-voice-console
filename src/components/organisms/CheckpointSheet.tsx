@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Play, Check } from 'lucide-react'
-import { CheckpointCard, type CheckpointTone } from '@/components/domain/CheckpointCard'
-import { WaveformTrack, generateBars } from '@/components/domain/WaveformTrack'
+import { CheckpointCard, type CheckpointTone } from '@/components/molecules/CheckpointCard'
+import { WaveformTrack, generateBars } from '@/components/organisms/WaveformTrack'
 import { cn } from '@/lib/cn'
 
 /* ------------------------------------------------------------------ *

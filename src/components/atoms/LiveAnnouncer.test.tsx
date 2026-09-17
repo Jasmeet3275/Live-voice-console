@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { render, act } from '@testing-library/react'
 import { CallStore } from '@/store/callStore'
 import { CallStoreContext } from '@/store/callContext'
-import { LiveAnnouncer } from './LiveAnnouncer'
+import { LiveAnnouncer } from '@/components/atoms/LiveAnnouncer'
 import type { CallTransport, ServerEvent } from '@/types/call'
 
 class FakeTransport implements CallTransport {

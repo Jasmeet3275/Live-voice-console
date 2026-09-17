@@ -1,5 +1,5 @@
 import { Lock } from 'lucide-react'
-import { Tooltip } from '@/components/ui'
+import { Tooltip } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 
 /** Persistent recording + privacy indicator. Meant to be absolutely

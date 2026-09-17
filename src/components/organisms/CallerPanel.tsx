@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Phone, Scissors, Clock, CalendarDays, StickyNote } from 'lucide-react'
-import { Avatar, Badge, Divider, Tooltip, Pressable } from '@/components/ui'
+import { Avatar, Badge, Divider, Tooltip, Pressable } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 
 export interface PastVisit {

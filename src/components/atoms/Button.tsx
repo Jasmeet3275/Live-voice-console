@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { Slot } from 'radix-ui'
 import { cn } from '@/lib/cn'
-import { Spinner } from './Spinner'
+import { Spinner } from '@/components/atoms/Spinner'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg'

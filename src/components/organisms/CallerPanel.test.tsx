@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
 import { renderUI } from '@/test/utils'
-import { CallerPanel, type Caller } from './CallerPanel'
+import { CallerPanel, type Caller } from '@/components/organisms/CallerPanel'
 
 const caller: Caller = {
   name: 'Jordan Rivera',

@@ -1,5 +1,5 @@
 import type { Call, StepType } from '@/types/call'
-import type { BookingFields, ConfirmState } from '@/components/domain/BookingRecordPanel'
+import type { BookingFields, ConfirmState } from '@/components/organisms'
 import { deriveServiceTotals } from '@/mock/salon'
 import { deriveCallSummary } from './callSummary'
 

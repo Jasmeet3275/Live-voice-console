@@ -1,5 +1,5 @@
 import type { Call, FeedItem } from '@/types/call'
-import type { CallSummaryProps } from '@/components/domain/CallSummary'
+import type { CallSummaryProps } from '@/components/organisms'
 
 /** Build the end-of-call recap from the feed + current slot selection. */
 export function deriveCallSummary(call: Call, customer: string): CallSummaryProps | null {

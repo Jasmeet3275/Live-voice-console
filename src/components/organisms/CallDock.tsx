@@ -1,10 +1,10 @@
 import { forwardRef, useMemo, type ReactNode } from 'react'
 import { Mic, MicOff, Volume2, VolumeX, PhoneOff, Headset, Bot, CalendarPlus } from 'lucide-react'
-import { Button, Tooltip, Pressable } from '@/components/ui'
+import { Button, Tooltip, Pressable } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 import { generateWaveform, formatTime } from '@/lib/audio'
-import { Waveform } from './Waveform'
-import { MiniSpeaker } from './MiniSpeaker'
+import { Waveform } from '@/components/organisms/Waveform'
+import { MiniSpeaker } from '@/components/atoms/MiniSpeaker'
 
 export interface CallDockProps {
   progress: number // 0–1 from the shared clock

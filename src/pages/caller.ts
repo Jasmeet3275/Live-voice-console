@@ -1,4 +1,4 @@
-import type { Caller } from '@/components/domain/CallerPanel'
+import type { Caller } from '@/components/organisms'
 
 /** The caller for the demo call — shared by the console and the booking page
  *  (both read the same live store; this is just the static CRM context). */

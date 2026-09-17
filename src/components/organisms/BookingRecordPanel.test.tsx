@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { screen, within, fireEvent } from '@testing-library/react'
 import { renderUI } from '@/test/utils'
-import { BookingRecordPanel } from './BookingRecordPanel'
+import { BookingRecordPanel } from '@/components/organisms/BookingRecordPanel'
 
 describe('BookingRecordPanel', () => {
   it('renders withheld display rows without an editable form', () => {

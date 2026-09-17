@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Popover } from 'radix-ui'
 import { Check, TriangleAlert } from 'lucide-react'
-import { Pressable } from '@/components/ui'
+import { Pressable } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 
 export interface TranscriptWord {

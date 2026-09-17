@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ConfidenceWord } from './ConfidenceWord'
+import { ConfidenceWord } from '@/components/atoms/ConfidenceWord'
 
 describe('ConfidenceWord', () => {
   it('renders a high-confidence word as plain text (no button)', () => {

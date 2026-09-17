@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { StatusChip, Spinner, Pressable, type Status } from '@/components/ui'
+import { StatusChip, Spinner, Pressable, type Status } from '@/components/atoms'
 import { cn } from '@/lib/cn'
 
 const stateColor: Record<Status, string> = {
