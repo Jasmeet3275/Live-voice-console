@@ -63,13 +63,13 @@ describe('InlineCheckpoint', () => {
     expect(t.sent).toContainEqual({ type: 'correctWord', lineId: 'l2', wordIndex: 3, chosen: 'facial' })
   })
 
-  it('correct-word: focus lands on the replay clip so you can listen before deciding', () => {
+  it('correct-word: focus lands on the AI’s pick (the transcribed word) so Enter accepts it', () => {
     setup((tr) => {
       tr.emit({ type: 'transcript.line', line: { id: 'l2', speaker: 'caller', words: WORDS, final: true } })
       tr.emit({ type: 'input.requested', await: 'correctWord', request: { kind: 'correctWord', title: 'What did the caller say?', lineId: 'l2', wordIndex: 3, alternatives: ['fades', 'facial'] } })
     })
-    // This checkpoint has a 2s replay clip — the operator hears it before deciding.
-    expect(screen.getByRole('button', { name: /play clip/i })).toHaveFocus()
+    // Focused layout has no evidence panel — focus lands straight on the pick row.
+    expect(screen.getByRole('button', { name: /fades/ })).toHaveFocus()
   })
 
   it('select-slot: the AI pick is auto-focused (no clip) and Enter offers it', async () => {

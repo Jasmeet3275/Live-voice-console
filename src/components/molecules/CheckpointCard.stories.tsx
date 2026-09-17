@@ -7,7 +7,6 @@ const meta = {
   tags: ['autodocs'],
   args: {
     label: 'Held — you decide',
-    stage: 'Understanding · service',
     cost: 'dead air 0:12',
     tone: 'hold',
     children: <p className="text-caption text-text-secondary">One word decides the booking, and it came through at 58%.</p>,
@@ -19,5 +18,5 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Hold: Story = { args: { tone: 'hold', label: 'Held — you decide' } }
-export const Ink: Story = { args: { tone: 'ink', label: 'Agent needs a human', stage: 'Escalation', cost: undefined } }
-export const Danger: Story = { args: { tone: 'danger', label: 'Payment — you decide', stage: 'Deposit · declined', cost: undefined } }
+export const Ink: Story = { args: { tone: 'ink', label: 'Agent needs a human', cost: undefined } }
+export const Danger: Story = { args: { tone: 'danger', label: 'Payment — you decide', cost: undefined } }

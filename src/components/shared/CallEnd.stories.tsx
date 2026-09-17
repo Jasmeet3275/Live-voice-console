@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { CallEndedReceipt, CallDroppedCheckpoint, DroppedEvidence } from './callEnd'
+import { CallEndedReceipt, CallDroppedCheckpoint } from './callEnd'
 
 const meta = {
   title: 'Shared/CallEnd',
@@ -18,9 +18,4 @@ export const EndedReceipt: Story = {
 export const Dropped: Story = {
   name: 'Call dropped (checkpoint)',
   render: () => <CallDroppedCheckpoint onSelect={(k) => console.log('chose', k)} />,
-}
-
-export const Evidence: Story = {
-  name: 'DroppedEvidence',
-  render: () => <DroppedEvidence service="Fade + beard trim" stylist="Marco Diaz" />,
 }

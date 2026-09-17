@@ -87,24 +87,25 @@ export interface SlotOptionSpec {
   hotkey: 'Enter' | '2' | '3'
   key: string
   title: string
-  rationale: string
+  /** The single qualifier — the one thing that decides this vs. the pick. */
+  note?: string
   pick?: boolean
   dashed?: boolean
 }
 
-/** The 2–3 offer decision cards (AI's pick first, dashed "ask" last). */
+/** The 2–3 offer rows (AI's pick first, dashed "ask" last). */
 export function slotOptionSpecs(best: Slot, alt?: Slot): SlotOptionSpec[] {
   const specs: SlotOptionSpec[] = [
-    { mode: 'one', hotkey: 'Enter', key: 'Offer · Enter', title: `Offer ${shortTime(best.time)} only`, pick: true, rationale: 'One clear option closes fastest — callers usually take the first offer.' },
+    { mode: 'one', hotkey: 'Enter', key: 'Offer · Enter', title: `Offer ${shortTime(best.time)} only`, pick: true, note: 'closes fastest' },
   ]
   if (alt) {
-    specs.push({ mode: 'both', hotkey: '2', key: 'Offer both · 2', title: `Offer ${shortTime(best.time)} and ${shortTime(alt.time)}`, rationale: 'Gives a choice and holds both briefly. Adds a few seconds and risks the later one.' })
+    specs.push({ mode: 'both', hotkey: '2', key: 'Offer both · 2', title: `Offer ${shortTime(best.time)} and ${shortTime(alt.time)}`, note: 'holds both briefly' })
   }
-  specs.push({ mode: 'ask', hotkey: alt ? '3' : '2', key: `Ask · ${alt ? 3 : 2}`, title: 'Ask how late they can go', dashed: true, rationale: 'No times released yet. Useful if you would rather keep the prime slot for a walk-in.' })
+  specs.push({ mode: 'ask', hotkey: alt ? '3' : '2', key: `Ask · ${alt ? 3 : 2}`, title: 'Ask how late they can go', dashed: true, note: 'releases nothing' })
   return specs
 }
 
-/** Shared claim/evidence/readback for the slot checkpoint — used live and in the demo. */
+/** Shared question/context/specs for the slot checkpoint — used live and in the demo. */
 export function buildSlotDecision(slots: Slot[]) {
   const { best, alt } = pickBestAlt(slots)
   if (!best) return null
@@ -113,11 +114,8 @@ export function buildSlotDecision(slots: Slot[]) {
     best,
     alt,
     label: 'Slot — you decide',
-    category: 'Availability · what to offer',
-    claim: <>The best evening opening is a {best.duration} block with {first} — <b className="text-warning">{shortTime(best.time)}</b>.</>,
-    subline: 'The AI reads out only what you release here. Availability is live, so the longer this sits the more likely a slot goes.',
-    evidence: <SlotOpenings slots={slots} />,
-    readback: `I have ${shortTime(best.time)} with ${first} — that's a ${best.services.join(' and ').toLowerCase()}. Shall I take it?`,
+    claim: <>Which openings should the AI offer?</>,
+    subline: `${first} · ${shortTime(best.time)} · ${best.duration} · ${best.price}`,
     specs: slotOptionSpecs(best, alt),
   }
 }
@@ -136,14 +134,14 @@ export function InlineSlotPick({
   const d = buildSlotDecision(slots)
   if (!d) return null
   const options: CheckpointOption[] = d.specs.map((sp) => ({
-    key: sp.key, title: sp.title, rationale: sp.rationale, pick: sp.pick, dashed: sp.dashed,
+    key: sp.key, title: sp.title, note: sp.note, pick: sp.pick, dashed: sp.dashed,
     onSelect: () => onOffer(d.best.id, sp.mode),
   }))
   return (
     <CheckpointSheet
-      label={d.label} category={d.category}
-      claim={d.claim} subline={d.subline} evidence={d.evidence}
-      options={options} readback={d.readback}
+      label={d.label} cost="dead air 0:03"
+      claim={d.claim} subline={d.subline}
+      options={options}
       showKeys={showKeys} indent={indent} className={cn(className)}
     />
   )

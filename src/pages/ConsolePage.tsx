@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
-import { Play, Pause, RotateCcw, PhoneOff, Moon, Sun, Keyboard, ClipboardList, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { Play, Pause, RotateCcw, PhoneOff, Moon, Sun, Keyboard, ClipboardList, ChevronRight } from 'lucide-react'
 import { Select, IconButton, Tooltip, Modal } from '@/components/atoms'
 import { CallProvider } from '@/store/CallProvider'
 import { useCall, useCallSend } from '@/hooks/useCall'
@@ -119,6 +119,7 @@ const Feed = memo(function Feed({ over, onTakeOver, onOpenBooking }: { over: boo
             <TranscriptLine
               key={item.id}
               speaker={item.speaker}
+              name={item.speaker === 'caller' ? CALLER.name : undefined}
               words={item.words}
               time={item.time}
               readOnly
@@ -375,15 +376,26 @@ function ConsoleHeader({ onShowShortcuts }: { onShowShortcuts: () => void }) {
   const navigate = useNavigate()
   const started = clock.elapsed > 0
   const recording = call.recording && !call.ended
+  const callerInitials = CALLER.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
 
   return (
     <header className="shrink-0 border-b border-border bg-surface">
-      {/* desktop — brand · recording · status · gap · elapsed · operator · utilities */}
+      {/* desktop — brand · caller · recording · status · gap · elapsed · operator · utilities */}
       <div className="hidden h-14 items-center gap-3 px-5 lg:flex">
         <div className="flex items-center gap-2.5">
           <span className="h-[22px] w-[22px] rounded-lg bg-accent" />
           <span className="text-[14.5px] font-bold tracking-[-0.015em] text-text">Zoca Front Desk</span>
           <span className="text-[13px] text-text-muted">Luxe Salon</span>
+        </div>
+        {/* Who's on the line — the caller's identity, so the operator never loses
+            track of who they're helping even with the customer rail collapsed. */}
+        <span className="h-[26px] w-px bg-border" />
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[11px] font-semibold text-text-secondary">{callerInitials}</span>
+          <div className="min-w-0 leading-tight">
+            <div className="truncate text-[13px] font-semibold text-text">{CALLER.name}</div>
+            <div className="hidden truncate text-[10.5px] text-text-muted xl:block">{CALLER.status} · {CALLER.visitsCount} visits</div>
+          </div>
         </div>
         <RecordingPill />
         <StatusPill />
@@ -604,8 +616,9 @@ function RailResizeHandle({
   )
 }
 
-/** A collapsed rail — a 46px strip with an expand chevron, a small glyph, and a
- *  vertical label. Click the chevron (or anywhere) to bring the rail back. */
+/** A collapsed rail — a 46px strip with a small glyph and a vertical label. The
+ *  whole strip is the button: click (or Enter/Space) anywhere on it to bring the
+ *  rail back — no separate expand control needed. */
 function CollapsedRail({
   side, label, onExpand, children,
 }: {
@@ -614,24 +627,19 @@ function CollapsedRail({
   onExpand: () => void
   children?: React.ReactNode
 }) {
-  const Icon = side === 'left' ? ChevronsRight : ChevronsLeft
   return (
-    <div
+    <button
+      type="button"
+      onClick={onExpand}
+      aria-label={`Expand ${label.toLowerCase()}`}
       className={cn(
-        'hidden w-[46px] shrink-0 flex-col items-center gap-3.5 bg-surface py-3.5 lg:flex',
+        'group hidden w-[46px] shrink-0 cursor-pointer flex-col items-center gap-3.5 bg-surface py-3.5 transition-colors hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent lg:flex',
         side === 'left' ? 'border-r border-border' : 'border-l border-border',
       )}
     >
-      <button
-        onClick={onExpand}
-        aria-label={`Expand ${label.toLowerCase()}`}
-        className="flex h-7 w-7 items-center justify-center rounded-[9px] border border-border text-text-secondary transition-colors hover:bg-surface-2 hover:text-text"
-      >
-        <Icon size={15} />
-      </button>
       {children}
       <span className="text-[9.5px] font-bold uppercase tracking-[0.16em] text-text-muted [writing-mode:vertical-rl]">{label}</span>
-    </div>
+    </button>
   )
 }
 

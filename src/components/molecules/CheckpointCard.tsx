@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
  * CheckpointCard — the shared inline shell for every operator input in
  * the thread (never a modal). Amber for a decision between good options,
  * ink for a failure the AI can't route around, red for hard danger.
- * Header: dot · what needs you · category · elapsed cost of waiting.
+ * Header, focused: dot · what needs you · elapsed cost of waiting.
  * ------------------------------------------------------------------ */
 
 export type CheckpointTone = 'hold' | 'ink' | 'danger'
@@ -35,7 +35,6 @@ const TONES: Record<CheckpointTone, { card: string; head: string; dot: string; t
 
 export function CheckpointCard({
   label,
-  stage,
   cost,
   tone = 'hold',
   indent = true,
@@ -44,8 +43,6 @@ export function CheckpointCard({
 }: {
   /** Uppercase eyebrow — what needs you, e.g. "Held — you decide". */
   label: string
-  /** Category — the stage/field, e.g. "Understanding · service". */
-  stage?: string
   /** Elapsed cost of waiting, verbatim, e.g. "dead air 0:12" or "slot held 3:42". */
   cost?: string
   tone?: CheckpointTone
@@ -58,8 +55,7 @@ export function CheckpointCard({
     <div className={cn('animate-rise overflow-hidden rounded-[15px] border-[1.5px] bg-surface', t.card, indent && 'ml-[37px]', className)}>
       <div className={cn('flex items-center gap-2.5 border-b px-4 py-2.5', t.head)}>
         <span className={cn('h-2 w-2 shrink-0 rounded-full animate-breathe', t.dot)} />
-        <span className={cn('shrink-0 text-[10px] font-bold uppercase tracking-[0.11em]', t.text)}>{label}</span>
-        {stage && <span className={cn('min-w-0 flex-1 truncate text-[12.5px]', t.sub)}>{stage}</span>}
+        <span className={cn('min-w-0 shrink-0 text-[10px] font-bold uppercase tracking-[0.11em]', t.text)}>{label}</span>
         {cost && <span className={cn('ml-auto shrink-0 text-[11.5px]', t.sub)}>{cost}</span>}
       </div>
       <div className="p-4">{children}</div>

@@ -1,4 +1,3 @@
-import { Play } from 'lucide-react'
 import { CheckpointSheet, type CheckpointOption } from '@/components/organisms/CheckpointSheet'
 import { ThreadDivider } from '@/components/molecules/threadParts'
 
@@ -60,34 +59,6 @@ export function CallEndedReceipt({
 
 /* ---- call dropped ---- */
 
-export function DroppedEvidence({ service, stylist }: { service: string; stylist: string }) {
-  return (
-    <>
-      <div className="mb-3 flex flex-wrap gap-2.5">
-        <div className="min-w-[170px] flex-1 rounded-[11px] bg-bg-app px-3.5 py-3">
-          <div className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-text-muted">Captured before the drop</div>
-          <div className="flex flex-col gap-1 text-[12.5px] text-text">
-            <div className="flex gap-2"><span className="w-[54px] shrink-0 text-text-muted">Service</span><span className="font-semibold">{service}</span></div>
-            <div className="flex gap-2"><span className="w-[54px] shrink-0 text-text-muted">Stylist</span><span className="font-semibold">{stylist}</span></div>
-          </div>
-        </div>
-        <div className="min-w-[170px] flex-1 rounded-[11px] border-l-[3px] border-warning-solid bg-bg-app px-3.5 py-3">
-          <div className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-warning">Never confirmed</div>
-          <div className="flex flex-col gap-1 text-[12.5px] text-text-muted">
-            <div className="flex gap-2"><span className="w-[54px] shrink-0 text-text-muted">Time</span><span>—— never heard a yes</span></div>
-            <div className="flex gap-2"><span className="w-[54px] shrink-0 text-text-muted">Deposit</span><span>—— not charged</span></div>
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center gap-3 rounded-[11px] bg-bg-app px-3 py-2">
-        <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full bg-text text-text-inverse"><Play size={11} className="ml-0.5 fill-current" /></span>
-        <span className="flex-1 text-[12.5px] text-text-secondary">Last 6 seconds — signal drop, no goodbye</span>
-        <span className="tabular shrink-0 text-[11.5px] text-text-muted">0:41 · 6.0s</span>
-      </div>
-    </>
-  )
-}
-
 export function CallDroppedCheckpoint({
   onSelect, showKeys = true, indent = false,
   service = 'Fade + beard trim', stylist = 'Marco Diaz', time = 'the 6:30 slot',
@@ -107,17 +78,14 @@ export function CallDroppedCheckpoint({
       <div className="mt-3">
         <CheckpointSheet
           indent={indent}
-          label="Dropped — needs you" category="Mid-decision · nothing saved" cost="slot held 3:12"
-          claim={<>The caller's line cut out <b className="text-warning">mid-readback</b> of {time}.</>}
-          subline="No booking was written and no deposit taken. The chair is still reserved for three more minutes, then it returns to the online pool."
-          evidence={<DroppedEvidence service={service} stylist={stylist} />}
+          label="Dropped — needs you" cost="slot held 3:12"
+          claim={<>Jordan dropped <b className="text-warning">mid-readback</b> of {time}. Keep it?</>}
+          subline={`Nothing saved, nothing charged · chair held three more minutes · ${service} with ${stylist}`}
           options={[
-            opt({ key: 'Call back · Enter', title: 'Call back now', pick: true, rationale: 'Dials ··· 4821 and resumes at the readback. Slot survives if he answers inside three minutes.' }),
-            opt({ key: 'Text · 2', title: 'Hold it and text', rationale: 'Books the 6:30 provisionally and texts a one-tap confirm. Auto-releases at 6:45.' }),
-            opt({ key: 'Release · 3', title: 'Release the slot', dashed: true, rationale: 'Nothing is saved and the chair goes back online. Jordan is left to call again.' }),
+            opt({ key: 'Call back · Enter', title: 'Call back now', note: 'resumes at the readback', pick: true }),
+            opt({ key: 'Text · 2', title: 'Hold it and text', note: 'one-tap confirm · releases 6:45' }),
+            opt({ key: 'Release · 3', title: 'Release the slot', note: 'chair goes back online', dashed: true }),
           ]}
-          readbackLabel="On the call back, Jordan hears"
-          readback="Sorry, we lost you there — I still have 6:30 with Marco. Shall I lock it in?"
           showKeys={showKeys}
         />
       </div>

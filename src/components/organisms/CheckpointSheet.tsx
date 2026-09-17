@@ -1,21 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
-import { Play, Check } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { CheckpointCard, type CheckpointTone } from '@/components/molecules/CheckpointCard'
 import { WaveformTrack, generateBars } from '@/components/organisms/WaveformTrack'
 import { cn } from '@/lib/cn'
 
 /* ------------------------------------------------------------------ *
- * CheckpointSheet — one component, every variant. The frame never
- * changes: claim (deciding number in amber) · what's blocked · an
- * evidence block the operator checks · 2–3 decision cards (AI's pick
- * marked, last is the dashed slower/safer path) · readback.
+ * CheckpointSheet — the "focused" checkpoint: three blocks instead of
+ * five. Header (what's blocked + cost of waiting) · question (one line,
+ * plus a line of context) · options — stacked single-line rows, the AI's
+ * pick teal at the top, the passive path dashed at the bottom, the key on
+ * the right. Each option carries at most one qualifier — the thing that
+ * decides between it and the pick. The old evidence panel, per-option
+ * reasoning and readback are dropped: the detail lives behind the
+ * decision, not in front of it. Matches "Checkpoint components - focused".
  * ------------------------------------------------------------------ */
 
 export interface CheckpointOption {
-  /** Keycap hint line, e.g. "Confirm · Enter". */
+  /** Unique id + keycap source, e.g. "Confirm · Enter" — the part after the
+   *  last "·" is shown as the key hint on the right (Enter / 2 / 3 / ⌘⇧T). */
   key: string
   title: string
-  rationale: string
+  /** The single qualifier — the one thing that decides this vs. the pick. */
+  note?: string
   /** The AI's recommended option — teal (or ink, in a hand-off). */
   pick?: boolean
   /** The slower / safer path — rendered dashed. */
@@ -23,63 +29,71 @@ export interface CheckpointOption {
   onSelect?: () => void
 }
 
-function OptionCard({
-  opt, tone, active, showKey, onClick,
+/** "Confirm · Enter" → "Enter"; "Take over · ⌘⇧T" → "⌘⇧T". */
+const keycap = (key: string) => key.split('·').pop()?.trim() ?? key
+
+function OptionRow({
+  opt, tone, showKey, onClick,
 }: {
-  opt: CheckpointOption; tone: CheckpointTone; active: boolean; showKey: boolean; onClick: () => void
+  opt: CheckpointOption; tone: CheckpointTone; showKey: boolean; onClick: () => void
 }) {
-  // The selected card carries the emphasis (teal fill, or ink fill in a hand-off);
-  // the "AI's pick" badge stays on its card so the recommendation is always visible.
-  const darkActive = active && tone === 'ink'
+  // The pick row carries the emphasis permanently (teal fill, or ink fill in a
+  // hand-off) so the recommendation reads at a glance — there's no separate
+  // "selected" state, because clicking a row commits the decision immediately.
+  const inkPick = opt.pick && tone === 'ink'
   return (
     <button
       data-option
       onClick={onClick}
-      aria-pressed={active}
       className={cn(
-        'flex w-full flex-col rounded-xl p-3 text-left transition-transform duration-150 hover:-translate-y-0.5 sm:w-auto sm:min-w-[190px] sm:flex-1',
+        'flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
-        active
-          ? darkActive ? 'border-[1.5px] border-text bg-text' : 'border-[1.5px] border-accent bg-accent-subtle'
-          : opt.dashed ? 'border border-dashed border-border-strong bg-bg-app' : 'border border-border-strong bg-bg-app',
+        opt.pick
+          ? inkPick
+            ? 'border-[1.5px] border-text bg-text hover:bg-text/90'
+            : 'border-[1.5px] border-accent bg-accent-subtle hover:bg-accent-subtle/70'
+          : opt.dashed
+            ? 'border border-dashed border-border-strong bg-bg-app hover:border-text/40'
+            : 'border border-border-strong bg-bg-app hover:border-text/30',
       )}
     >
-      {/* header row — top-aligned across cards */}
-      <div className="mb-1.5 flex items-start gap-1.5">
-        <span className={cn('text-[14.5px] font-semibold leading-tight', darkActive ? 'text-text-inverse' : active ? 'text-success' : 'text-text')}>
-          {opt.title}
+      <span className={cn('min-w-0 truncate text-[15px] font-medium leading-tight',
+        inkPick ? 'text-text-inverse' : opt.pick ? 'text-success' : 'text-text')}>
+        {opt.title}
+      </span>
+      {opt.pick && (
+        <span className={cn('shrink-0 rounded-[5px] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em]',
+          inkPick ? 'bg-white/20 text-white' : 'bg-accent text-accent-fg')}>
+          AI’s pick
         </span>
-        {opt.pick && (
-          <span className={cn('mt-0.5 shrink-0 rounded-[5px] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em]', darkActive ? 'bg-white/20 text-white' : active ? 'bg-accent text-accent-fg' : 'bg-surface-2 text-text-secondary')}>AI’s pick</span>
-        )}
-        {active && <Check size={15} className={cn('ml-auto mt-0.5 shrink-0', darkActive ? 'text-text-inverse' : 'text-accent')} />}
-      </div>
-      {/* rationale grows so the key row bottom-aligns across cards */}
-      <p className={cn('flex-1 text-[11.5px] leading-[1.45]', darkActive ? 'text-text-inverse/80' : active ? 'text-success' : 'text-text-muted')}>{opt.rationale}</p>
-      {showKey && <p className={cn('mt-2 text-[11px] font-semibold', darkActive ? 'text-text-inverse/90' : active ? 'text-accent' : 'text-text-secondary')}>{opt.key}</p>}
+      )}
+      {opt.note
+        ? <span className={cn('min-w-0 flex-1 truncate text-[12px]',
+            inkPick ? 'text-text-inverse/70' : opt.pick ? 'text-success/90' : 'text-text-muted')}>{opt.note}</span>
+        : <span className="flex-1" />}
+      {showKey && (
+        <span className={cn('shrink-0 text-[11.5px] font-semibold',
+          inkPick ? 'text-text-inverse/80' : opt.pick ? 'text-accent' : 'text-text-secondary')}>
+          {keycap(opt.key)}
+        </span>
+      )}
     </button>
   )
 }
 
 export function CheckpointSheet({
-  label, category, cost, tone = 'hold',
-  claim, subline, evidence, options, readback, readbackLabel,
+  label, cost, tone = 'hold',
+  claim, subline, options,
   showKeys = true, indent = false, autoFocus = false, className,
 }: {
   label: string
-  category?: string
   cost?: string
   tone?: CheckpointTone
-  /** One sentence; embed the deciding number as <b className="text-warning">. */
+  /** The question — one line; embed the deciding number as <b className="text-warning">. */
   claim: React.ReactNode
+  /** One line of context under the question (the facts, the state). */
   subline?: string
-  /** The block the operator checks the claim against (clip, record, trace…). */
-  evidence?: React.ReactNode
   options: CheckpointOption[]
-  /** What the caller hears the moment you choose. */
-  readback?: string
-  /** Override the readback eyebrow (default "Jordan then hears"). */
-  readbackLabel?: string
   showKeys?: boolean
   indent?: boolean
   /** Move focus onto the AI's pick when the checkpoint opens (live console only;
@@ -87,20 +101,13 @@ export function CheckpointSheet({
   autoFocus?: boolean
   className?: string
 }) {
-  // Selection starts on the AI's pick; clicking a card moves it (and fires onSelect).
-  const [selected, setSelected] = useState(() => options.find((o) => o.pick)?.key ?? options[0]?.key)
   const groupRef = useRef<HTMLDivElement>(null)
-  const evidenceRef = useRef<HTMLDivElement>(null)
 
-  // When the checkpoint opens, move focus to the natural starting point so the
-  // operator can act with the keyboard immediately (no hunting for it). If the
-  // evidence has a replay clip (the "Held — you decide" word check), that's the
-  // clip's play button — you listen before you decide; otherwise the AI's pick.
-  // The sheet is remounted per checkpoint, so this fires once when it appears.
+  // When the checkpoint opens, move focus to the AI's pick so the operator can
+  // act with the keyboard immediately (Enter/Space then commits it). The sheet
+  // is remounted per checkpoint, so this fires once when it appears.
   useEffect(() => {
     if (!autoFocus) return
-    const clip = evidenceRef.current?.querySelector<HTMLButtonElement>('[data-clip-play]')
-    if (clip) { clip.focus(); return }
     const cards = groupRef.current?.querySelectorAll<HTMLButtonElement>('[data-option]')
     if (!cards?.length) return
     const pick = Math.max(0, options.findIndex((o) => o.pick))
@@ -108,7 +115,7 @@ export function CheckpointSheet({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Arrow keys rove focus across the decision cards (Enter/Space then activates
+  // Arrow keys rove focus down/up the stacked rows (Enter/Space then activates
   // the focused one). Home/End jump to the first/last.
   const onArrowNav = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return
@@ -125,28 +132,25 @@ export function CheckpointSheet({
   }
 
   return (
-    <CheckpointCard label={label} stage={category} cost={cost} tone={tone} indent={indent} className={className}>
-      <p className="mb-1 text-[14px] leading-[1.5] text-text">{claim}</p>
-      {subline && <p className="mb-3 text-[12.5px] leading-[1.5] text-text-secondary">{subline}</p>}
-      {evidence && <div ref={evidenceRef} className="mb-3">{evidence}</div>}
-      <div ref={groupRef} role="group" aria-label="Choose an option — Arrow keys to move, Enter to pick" onKeyDown={onArrowNav} className="mb-3 flex flex-wrap items-stretch gap-2.5">
+    <CheckpointCard label={label} cost={cost} tone={tone} indent={indent} className={className}>
+      <p className="text-[14.5px] font-semibold leading-[1.35] tracking-[-0.01em] text-text">{claim}</p>
+      {subline && <p className="mt-1 text-[12.5px] leading-[1.5] text-text-muted">{subline}</p>}
+      <div ref={groupRef} role="group" aria-label="Choose an option — Arrow keys to move, Enter to pick" onKeyDown={onArrowNav} className="mt-3 flex flex-col gap-[7px]">
         {options.map((o) => (
-          <OptionCard
+          <OptionRow
             key={o.key}
             opt={o}
             tone={tone}
-            active={selected === o.key}
             showKey={showKeys}
-            onClick={() => { setSelected(o.key); o.onSelect?.() }}
+            onClick={() => o.onSelect?.()}
           />
         ))}
       </div>
-      {readback && <PreviewLine label={readbackLabel} quote={readback} />}
     </CheckpointCard>
   )
 }
 
-/* ---- shared evidence / readback pieces ---- */
+/* ---- shared pieces (still exported for standalone use / stories) ---- */
 
 /** "Jordan then hears …" — the spoken consequence of the choice. */
 export function PreviewLine({ label = 'Jordan then hears', quote }: { label?: string; quote: string }) {
